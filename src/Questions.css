@@ -44,12 +44,16 @@
 .child2 {
   display: inline-block;
   padding: 0rem 1rem;
+  margin: 0rem 1rem;
   vertical-align: top;
   /* width: 300px; */
 }
 .tb {
   width: 300px;
   background-color: white;
+}
+.bt {
+  margin-top: 500px;
 }
 
 
