@@ -1,16 +1,57 @@
-.App {
-  text-align: center;
+.create_exam{
+  background-color: white;
+  padding: 15px 5px;
 }
 
-
-.App-header {
-  /* background-color: #282c34; */
-  min-height: 100vh;
+.create_exam__header {
+  background-color: white;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  background-color: rgb(209, 214, 192);
-  /* color: white; */
+  align-items: center;
+  padding: 10px;
+}
+
+#create_exam__title {
+  font-size: 2rem;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+#create_exam__error{
+  display: none;
+}
+
+.create_exam__form{
+  width: 100%;
+  max-width: 600px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 1px 1px 10px 2px rgba(0, 0, 0, 0.3);
+}
+
+.create_exam__form .create_exam__formElement{
+  /* border: 1px solid black; */
+  padding: 5px; 
+}
+
+.create_exam__form .create_exam__formElement .create_exam__formLabel{
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.create_exam__form .create_exam__formElement .create_exam__formInput{
+  margin-top: 3px;
+  width: 100%;
+}
+.create_exam__form .create_exam__formElement .create_exam__formInput .create_exam__formTextInput{
+}
+
+@media screen and (min-width: 426px) {
+  #create_exam__formButton{
+    max-width: 200px;
+  }
+  .create_exam__header {
+    padding: 0px;
+  }
 }

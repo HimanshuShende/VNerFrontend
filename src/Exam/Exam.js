@@ -71,23 +71,19 @@ class Exam extends Component {
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <h1>Create Exam</h1>
-          <div style={{ color: "red" }}>{this.statusMessage}</div>
+      <div className="create_exam">
+        <header className="create_exam__header">
+          <h1 id="create_exam__title">Create Exam</h1>
+          <div id="create_exam__error" style={{ color: "red" }}>{this.statusMessage}</div>
           <Stack
+            className="create_exam__form"
             spacing={3}
-            sx={{
-              width: 900,
-              backgroundColor: "rgb(137, 199, 205)",
-              padding: 5,
-            }}
           >
-            <div className="parent">
-              <label className="child1">Exam name: </label>
-              <div className="child2">
+            <div className="create_exam__formElement">
+              <label className="create_exam__formLabel">Exam name: </label>
+              <div className="create_exam__formInput">
                 <TextField
-                  className="tb"
+                  className="create_exam__formTextInput"
                   style={{ width: "600px" }}
                   id="outlined-textarea"
                   placeholder="Enter exam name..."
@@ -97,11 +93,11 @@ class Exam extends Component {
               </div>
             </div>
 
-            <div className="parent">
-              <label className="child1">Max attempts allowed: </label>
-              <div className="child2">
+            <div className="create_exam__formElement">
+              <label className="create_exam__formLabel">Max attempts allowed: </label>
+              <div className="create_exam__formInput">
                 <TextField
-                  className="tb"
+                  className="create_exam__formTextInput"
                   style={{ width: "600px" }}
                   id="outlined-textarea"
                   placeholder="Enter exam name..."
@@ -111,11 +107,11 @@ class Exam extends Component {
               </div>
             </div>
 
-            <div className="parent">
-              <label className="child1">Exam tag: </label>
-              <div className="child2">
+            <div className="create_exam__formElement">
+              <label className="create_exam__formLabel">Exam tag: </label>
+              <div className="create_exam__formInput">
                 <Autocomplete
-                  className="tb"
+                  className="create_exam__formTextInput"
                   id="tags-outlined"
                   options={this.tags}
                   getOptionLabel={(option) => option}
@@ -130,11 +126,11 @@ class Exam extends Component {
               </div>
             </div>
 
-            <div className="parent">
-              <label className="child1">Level: </label>
-              <div className="child2">
+            <div className="create_exam__formElement">
+              <label className="create_exam__formLabel">Level: </label>
+              <div className="create_exam__formInput">
                 <Autocomplete
-                  className="tb"
+                  className="create_exam__formTextInput"
                   id="tags-outlined"
                   options={this.levels}
                   getOptionLabel={(option) => option}
@@ -150,7 +146,8 @@ class Exam extends Component {
             </div>
 
             <Button
-              style={{ width: "200px" }}
+              id="create_exam__formButton"
+              style={{ width: "100%" }}
               variant="contained"
               color="success"
               onClick={this.createExam}

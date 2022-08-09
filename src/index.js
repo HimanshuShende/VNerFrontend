@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import Exam from './Exam/Exam';
 import './index.css';
+import "./Exam/Exam.css"
+import "./Question/Questions.css"
 import Questions from './Question/Questions';
 import reportWebVitals from './reportWebVitals';
 

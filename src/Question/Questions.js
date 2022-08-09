@@ -183,15 +183,16 @@ class Questions extends Component {
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <h1>Exam Details</h1>
-          <Stack spacing={3} sx={{ width: 900, padding: 5 }}>
-            <div className="parent">
-              <label className="child1">Exam Name: </label>
-              <label className="child2">{this.state.examName}</label>
+      <div className="add_ques">
+        <header className="add_ques__header">
+          <h1 id="add_ques__title">Exam Details</h1>
+          <Stack className="add_ques__examDetails" spacing={1}>
+            <div className="add_ques__examDetails__examName">
+              <label className="add_ques__examDetails__examName_label">Exam Name: </label>
+              <label className="add_ques__examDetails__examName_value">{this.state.examName}</label>
               <Button
-                style={{ width: "50px" }}
+                className="add_ques__examDetails__examName_btn"
+                size="small"
                 variant="contained"
                 color="primary"
                 onClick={() => this.change(true, "editName")}
@@ -230,17 +231,18 @@ class Questions extends Component {
                 </DialogActions>
               </Dialog>
             </div>
-            <div className="parent">
-              <label className="child1">No of Questions: </label>
-              <label className="child2">{this.state.nQs}</label>
+            <div className="add_ques__examDetails__examName">
+              <label className="add_ques__examDetails__examName_label">No of Questions: </label>
+              <label className="add_ques__examDetails__examName_value">{this.state.nQs}</label>
             </div>
-            <div className="parent">
-              <label className="child1">Duration: </label>
-              <label className="child2">{this.state.duration}</label>
+            <div className="add_ques__examDetails__examName">
+              <label className="add_ques__examDetails__examName_label">Duration: </label>
+              <label className="add_ques__examDetails__examName_value">{this.state.duration}</label>
               <Button
-                style={{ width: "50px" }}
+                className="add_ques__examDetails__examName_btn"
                 variant="contained"
                 color="primary"
+                size="small"
                 onClick={() => this.change(true, "editDuration")}
               >
                 Edit
@@ -276,24 +278,21 @@ class Questions extends Component {
           </Stack>
 
           <Stack
-            spacing={3}
-            sx={{
-              width: 900,
-              backgroundColor: "rgb(137, 199, 205)",
-              padding: 5,
-            }}
+            className="add_ques__form"
+            spacing={1}
+            sx={{}}
           >
             <h3>Add Question</h3>
-            <div className="parent">
-              <label className="child1">S No: </label>
-              <label className="child2">{this.state.sNo}</label>
-            </div>
-            <div className="parent">
-              <label className="child1">Question: </label>
-              <div className="child2">
+            {/* <div className="add_ques__form__title">
+              <label className="add_ques__examDetails__examName_label">S No: </label>
+              <label className="add_ques__examDetails__examName_value">{this.state.sNo}</label>
+            </div> */}
+            <div className="add_ques__q">
+              <label className="add_ques__q_label">Question: </label>
+              <div className="add_ques__q_value">
                 <TextField
-                  className="tb"
-                  style={{ width: "600px" }}
+                  className="add_ques__q_textInput"
+                  style={{ width: "100%" }}
                   id="outlined-textarea"
                   placeholder="Enter your question..."
                   value={this.state.question}
@@ -303,12 +302,13 @@ class Questions extends Component {
               </div>
             </div>
 
-            <div className="parent">
-              <label className="child1">Options: </label>
-              <div className="child2">
+            <div className="add_ques__q">
+              <label className="add_ques__q_label">Options: </label>
+              <div className="add_ques__q_value">
                 <TextField
-                  className="tb"
+                  className="add_ques__q_textInput"
                   id="outlined-textarea"
+                  style={{ width: "100%" }}
                   placeholder="Enter your option..."
                   value={this.state.opt}
                   onChange={(e) => this.change(e.target.value, "opt")}
@@ -328,12 +328,12 @@ class Questions extends Component {
               </div>
             </div>
 
-            <div className="parent">
-              <label className="child1">Answer(s): </label>
-              <div className="child2">
+            <div className="add_ques__q">
+              <label className="add_ques__q_label">Answer(s): </label>
+              <div className="add_ques__q_value">
                 {this.answerOptions.map((option) => {
                   return (
-                    <div className="cb">
+                    <div className="add_ques__q_textInput answer">
                       <FormControlLabel
                         control={<Checkbox />}
                         label={option["statement"]}
@@ -352,11 +352,11 @@ class Questions extends Component {
               </div>
             </div>
 
-            <div className="parent">
-              <label className="child1">Subject: </label>
-              <div className="child2">
+            <div className="add_ques__q">
+              <label className="add_ques__q_label">Subject: </label>
+              <div className="add_ques__q_value">
                 <Autocomplete
-                  className="tb"
+                  className="add_ques__q_textInput"
                   id="tags-outlined"
                   options={this.subjects}
                   getOptionLabel={(option) => option}
@@ -372,10 +372,10 @@ class Questions extends Component {
             </div>
 
             {/* <div className="parent">
-            <div className="child1"> */}
-            <Stack direction="row" spacing={2}>
+            <div className="add_ques__examDetails__examName_label"> */}
+            <Stack className="add_ques__form__btnGrp" >
               <Button
-                style={{ width: "200px" }}
+                className="add_ques__form__btn"
                 variant="contained"
                 color="primary"
                 onClick={this.addQuestion}
@@ -383,9 +383,9 @@ class Questions extends Component {
                 Add Question
               </Button>
               {/* </div>
-            <div className="child2"> */}
+            <div className="add_ques__examDetails__examName_value"> */}
               <Button
-                style={{ width: "200px" }}
+                className="add_ques__form__btn"
                 variant="contained"
                 color="success"
                 onClick={this.completeExam}
