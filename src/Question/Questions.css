@@ -56,6 +56,11 @@
   margin-top: 500px;
 }
 
+.cb {
+  display: flex;
+  align-items: center;
+}
+
 
 @keyframes App-logo-spin {
   from {

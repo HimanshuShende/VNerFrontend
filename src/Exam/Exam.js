@@ -5,6 +5,8 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import "./Exam.css";
 import axios from "axios";
+axios.defaults.xsrfCookieName = "csrftoken";
+axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 
 const baseURL = "https://vnerapi.azurewebsites.net/api";
 
@@ -15,20 +17,17 @@ class Exam extends Component {
       examName: "",
       attempts: Number,
       level: Number,
-      tag: ""
+      tag: "",
     };
   }
 
   levels = [0, 1, 2];
-  tags = [
-     "JEE",
-     "NEET",
-  ];
+  tags = ["JEE", "NEET"];
   status = false;
   statusMessage = "crtexm";
 
   componentDidMount() {
-    axios.get(`${baseURL}/getExamTags`).then((response) => {
+    axios.get(`${baseURL}/getExamTags/`).then((response) => {
       this.tags = response.data["tags"];
     });
   }
@@ -38,7 +37,7 @@ class Exam extends Component {
       examName: "",
       attempts: Number,
       level: Number,
-      tag: ""
+      tag: "",
     });
   };
 
@@ -49,17 +48,25 @@ class Exam extends Component {
   };
 
   createExam = () => {
-    axios
-      .post(`${baseURL}/createExam/ `, {
-        "name": this.state.examName,
-        "tag": this.state.tag,
-        "exam_level": this.state.level,
-        "allowed_attempts": this.state.attempts,
+    const formData = new FormData();
+    formData.append(
+      "data",
+      JSON.stringify({
+        name: this.state.examName,
+        tag: this.state.tag,
+        exam_level: this.state.level,
+        allowed_attempts: this.state.attempts,
       })
+    );
+
+    axios
+      .post(`${baseURL}/createExam/ `, formData)
       .then((response) => {
         this.status = response.data["task_completed"];
         this.statusMessage = response.data["msg"];
-      });
+        console.log(response.data["data"]);
+      })
+      .catch((err) => (this.statusMessage = err));
   };
 
   render() {
@@ -133,7 +140,7 @@ class Exam extends Component {
                   getOptionLabel={(option) => option}
                   filterSelectedOptions
                   onChange={(e, v) => {
-                    this.change(v, "level")
+                    this.change(v, "level");
                   }}
                   renderInput={(params) => (
                     <TextField {...params} placeholder="Subject" />
