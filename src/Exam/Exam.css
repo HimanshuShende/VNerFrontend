@@ -47,6 +47,18 @@
 .create_exam__form .create_exam__formElement .create_exam__formInput .create_exam__formTextInput{
 }
 
+
+.create_exam__error{
+  width: 100%;
+}
+.create_exam__error code{
+  width: 100%;
+  color: red;
+  background-color: rgba(224, 6, 43, 0.3);
+  padding: 5px 10px;
+  border-left: 3px solid rgba(131, 0, 22, 0.4);
+}
+
 @media screen and (min-width: 426px) {
   #create_exam__formButton{
     max-width: 200px;

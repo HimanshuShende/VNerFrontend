@@ -79,6 +79,9 @@ class Exam extends Component {
             className="create_exam__form"
             spacing={3}
           >
+            <div className="create_exam__error">
+              <code> Error Message</code>
+            </div>
             <div className="create_exam__formElement">
               <label className="create_exam__formLabel">Exam name: </label>
               <div className="create_exam__formInput">

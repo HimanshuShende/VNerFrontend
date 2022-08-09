@@ -203,6 +203,9 @@ class Questions extends Component {
               <Dialog open={this.state.editName}>
                 <DialogTitle>Edit exam name</DialogTitle>
                 <DialogContent>
+                  <div className="add_ques__dialogue__error">
+                    <code> Error Message </code>
+                  </div>
                   <TextField
                     autoFocus
                     margin="dense"
@@ -251,6 +254,9 @@ class Questions extends Component {
               <Dialog open={this.state.editDuration}>
                 <DialogTitle>Edit exam duration</DialogTitle>
                 <DialogContent>
+                  <div className="add_ques__dialogue__error">
+                    <code> Error Message </code>
+                  </div>
                   <TextField
                     autoFocus
                     margin="dense"
@@ -283,10 +289,9 @@ class Questions extends Component {
             sx={{}}
           >
             <h3>Add Question</h3>
-            {/* <div className="add_ques__form__title">
-              <label className="add_ques__examDetails__examName_label">S No: </label>
-              <label className="add_ques__examDetails__examName_value">{this.state.sNo}</label>
-            </div> */}
+            <div className="add_ques__form__error">
+              <code> Error Message </code>
+            </div>
             <div className="add_ques__q">
               <label className="add_ques__q_label">Question: </label>
               <div className="add_ques__q_value">
