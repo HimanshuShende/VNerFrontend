@@ -1,6 +1,8 @@
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import "./Questions.css";
 import React, { Component } from "react";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { useParams } from 'react-router-dom'
+
+import "./Questions.css";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
@@ -29,11 +31,15 @@ class Questions extends Component {
       options: [],
       subject: "",
       examName: "",
+      examNameNew: "",
       examId: 0,
       duration: 0,
+      durationNew: 0,
       nQs: 0,
       editName: false,
       editDuration: false,
+      showError: false,
+      showDialogError: false,
     };
   }
 
@@ -41,18 +47,26 @@ class Questions extends Component {
   subjects = ["a", "b"];
 
   componentDidMount() {
+
+    const { id } = this.props.params;
+
+    console.log(id);
+
     axios.get(`${baseURL}/getSubjectTags/`).then((response) => {
       this.subjects = response.data["tags"];
     });
 
     const formData = new FormData();
-    formData.append("data", JSON.stringify({ exam_id: 1 }));
+    formData.append("data", JSON.stringify({ exam_id: id }));
     axios
       .post(`${baseURL}/getExamDetails/`, formData)
       .then((response) => {
         console.log(response);
         if (!response.data["task_completed"])
-          console.log(response.data["error"]);
+          {
+            console.log(response.data["msg"]);
+            alert("Exam not found");
+          }
         else {
           this.setState(
             {
@@ -75,6 +89,8 @@ class Questions extends Component {
       options: [],
       subject: "",
     });
+    this.answerOptions = [];
+    
   };
 
   change = (value, paramName) => {
@@ -85,19 +101,16 @@ class Questions extends Component {
   };
 
   addOption = () => {
-    if(!this.state.options.includes(this.state.opt))
-    this.setState(
-      {
-        options: [...this.state.options, this.state.opt],
-      },
-      // () =>
-      //   this.answerOptions.push({ statement: this.state.opt, isAnswer: false })
-      this.updateAddItems
-    );
+    if (!this.state.options.includes(this.state.opt))
+      this.setState(
+        {
+          options: [...this.state.options, this.state.opt],
+        },
+        this.updateAddItems
+      );
   };
 
   updateAddItems = () => {
-    
     this.answerOptions.push({ statement: this.state.opt, isAnswer: false });
     this.setState({
       opt: "",
@@ -110,7 +123,7 @@ class Questions extends Component {
     });
     this.answerOptions = this.answerOptions.filter(
       (option) => option["statement"] !== value
-    )
+    );
     console.log(this.answerOptions);
   };
 
@@ -122,27 +135,75 @@ class Questions extends Component {
     console.log(this.answerOptions);
   };
 
+  showErrorMessage = () => {
+    if (this.state.showError) {
+      return (
+        <div className="create_exam__error">
+          <code> {this.statusMessage}</code>
+        </div>
+      );
+    }
+  };
+
+  showDialogErrorMessage = () => {
+    if (this.state.showDialogError) {
+      return (
+        <div className="create_exam__error">
+          <code> {this.statusMessage}</code>
+        </div>
+      );
+    }
+  };
+
   addQuestion = () => {
-    const formData = new FormData();
-    formData.append(
-      "data",
-      JSON.stringify({
-        exam_id: 1,
-        question: this.state.question,
-        option_type: this.answerOptions.filter(
-          (option) => option["isAnswer"] === true
-        ).length,
-        options: this.answerOptions,
-        sub_tags: [this.state.subject],
-        marks: {
-          positive: 2,
-          negative: -1,
-        },
-      })
-    );
-    axios
-      .post(`${baseURL}/addQuestion/`, formData)
-      .then((res) => this.clearInputFields());
+    if (!this.state.question || this.state.question.length === 0) {
+      this.setState({ showError: true });
+      this.statusMessage = "Question statement cannot be empty";
+    } else if (!this.state.subject || this.state.subject.length === 0) {
+      this.setState({ showError: true });
+      this.statusMessage = "Subject tag cannot be empty";
+    } else if(this.answerOptions.length < 2){
+      this.setState({ showError: true });
+      this.statusMessage = "Enter atleast two optons";
+    }
+     else if(this.answerOptions.filter(
+      (option) => option["isAnswer"] === true
+    ).length === 0){
+      this.setState({ showError: true });
+      this.statusMessage = "Select atleast one option as an answer";
+    }
+     else {
+      const formData = new FormData();
+      formData.append(
+        "data",
+        JSON.stringify({
+          exam_id: this.state.examId,
+          question: this.state.question,
+          option_type: 1,
+          options: this.answerOptions,
+          sub_tags: [this.state.subject],
+          marks: {
+            positive: 2,
+            negative: -1,
+          },
+        })
+      );
+      axios
+        .post(`${baseURL}/addQuestion/`, formData)
+        .then((response) => {
+          this.status = response.data["task_completed"];
+          if (!this.status) {
+            this.setState({ showError: true });
+          }
+          this.statusMessage = response.data["msg"];
+          console.log(response.data["data"]);
+          this.clearInputFields();
+        })
+        .catch((err) => {
+          this.setState({ showError: true });
+          this.statusMessage = err;
+        });
+    }
   };
 
   completeExam = () => {
@@ -156,13 +217,27 @@ class Questions extends Component {
       "data",
       JSON.stringify({
         exam_id: this.state.examId,
-        exam_name: this.state.examName,
+        exam_name: this.state.examNameNew,
       })
     );
     axios
       .post(`${baseURL}/change_examName/`, formData)
-      .then((response) => console.log(response))
-      .catch((err) => console.log(err));
+      .then((response) => {
+        console.log(response);
+        this.status = response.data["task_completed"];
+        if (!this.status) {
+          this.setState({ showDialogError: true });
+        } else {
+          this.setState({ examName: response.data["data"]["name"] });
+        }
+        this.statusMessage = response.data["msg"];
+        console.log(response.data["data"]);
+      })
+      .catch((err) => {
+        this.setState({ showDialogError: true });
+        this.statusMessage = err;
+        console.log(err);
+      });
   };
 
   updateExamDuration = () => {
@@ -172,13 +247,27 @@ class Questions extends Component {
       "data",
       JSON.stringify({
         exam_id: this.state.examId,
-        exam_duration: this.state.duration,
+        exam_duration: this.state.durationNew,
       })
     );
     axios
       .post(`${baseURL}/change_examDuration/`, formData)
-      .then((response) => console.log(response))
-      .catch((err) => console.log(err));
+      .then((response) => {
+        console.log(response);
+        this.status = response.data["task_completed"];
+        if (!this.status) {
+          this.setState({ showDialogError: true });
+        } else {
+          this.setState({ duration: response.data["data"]["duration"] });
+        }
+        this.statusMessage = response.data["msg"];
+        console.log(response.data["data"]);
+      })
+      .catch((err) => {
+        this.setState({ showDialogError: true });
+        this.statusMessage = err;
+        console.log(err);
+      });
   };
 
   render() {
@@ -188,8 +277,12 @@ class Questions extends Component {
           <h1 id="add_ques__title">Exam Details</h1>
           <Stack className="add_ques__examDetails" spacing={1}>
             <div className="add_ques__examDetails__examName">
-              <label className="add_ques__examDetails__examName_label">Exam Name: </label>
-              <label className="add_ques__examDetails__examName_value">{this.state.examName}</label>
+              <label className="add_ques__examDetails__examName_label">
+                Exam Name:{" "}
+              </label>
+              <label className="add_ques__examDetails__examName_value">
+                {this.state.examName}
+              </label>
               <Button
                 className="add_ques__examDetails__examName_btn"
                 size="small"
@@ -203,9 +296,7 @@ class Questions extends Component {
               <Dialog open={this.state.editName}>
                 <DialogTitle>Edit exam name</DialogTitle>
                 <DialogContent>
-                  <div className="add_ques__dialogue__error">
-                    <code> Error Message </code>
-                  </div>
+                  {this.showDialogErrorMessage()}
                   <TextField
                     autoFocus
                     margin="dense"
@@ -213,8 +304,8 @@ class Questions extends Component {
                     label="Name"
                     fullWidth
                     variant="standard"
-                    value={this.state.examName}
-                    onChange={(e) => this.change(e.target.value, "examName")}
+                    value={this.state.examNameNew}
+                    onChange={(e) => this.change(e.target.value, "examNameNew")}
                   />
                 </DialogContent>
                 <DialogActions>
@@ -223,8 +314,8 @@ class Questions extends Component {
                   </Button>
                   <Button
                     disabled={
-                      this.state.examName
-                        ? !this.state.examName.length > 0
+                      this.state.examNameNew
+                        ? !this.state.examNameNew.length > 0
                         : true
                     }
                     onClick={this.updateExamName}
@@ -235,12 +326,20 @@ class Questions extends Component {
               </Dialog>
             </div>
             <div className="add_ques__examDetails__examName">
-              <label className="add_ques__examDetails__examName_label">No of Questions: </label>
-              <label className="add_ques__examDetails__examName_value">{this.state.nQs}</label>
+              <label className="add_ques__examDetails__examName_label">
+                No of Questions:{" "}
+              </label>
+              <label className="add_ques__examDetails__examName_value">
+                {this.state.nQs}
+              </label>
             </div>
             <div className="add_ques__examDetails__examName">
-              <label className="add_ques__examDetails__examName_label">Duration: </label>
-              <label className="add_ques__examDetails__examName_value">{this.state.duration}</label>
+              <label className="add_ques__examDetails__examName_label">
+                Duration:{" "}
+              </label>
+              <label className="add_ques__examDetails__examName_value">
+                {this.state.duration}
+              </label>
               <Button
                 className="add_ques__examDetails__examName_btn"
                 variant="contained"
@@ -254,9 +353,7 @@ class Questions extends Component {
               <Dialog open={this.state.editDuration}>
                 <DialogTitle>Edit exam duration</DialogTitle>
                 <DialogContent>
-                  <div className="add_ques__dialogue__error">
-                    <code> Error Message </code>
-                  </div>
+                  {this.showDialogErrorMessage()}
                   <TextField
                     autoFocus
                     margin="dense"
@@ -265,9 +362,9 @@ class Questions extends Component {
                     type="number"
                     fullWidth
                     variant="standard"
-                    value={this.state.duration}
+                    value={this.state.durationNew}
                     onChange={(e) =>
-                      this.change(parseInt(e.target.value), "duration")
+                      this.change(parseInt(e.target.value), "durationNew")
                     }
                   />
                 </DialogContent>
@@ -283,15 +380,9 @@ class Questions extends Component {
             </div>
           </Stack>
 
-          <Stack
-            className="add_ques__form"
-            spacing={1}
-            sx={{}}
-          >
+          <Stack className="add_ques__form" spacing={1} sx={{}}>
             <h3>Add Question</h3>
-            <div className="add_ques__form__error">
-              <code> Error Message </code>
-            </div>
+            {this.showErrorMessage()}
             <div className="add_ques__q">
               <label className="add_ques__q_label">Question: </label>
               <div className="add_ques__q_value">
@@ -366,11 +457,12 @@ class Questions extends Component {
                   options={this.subjects}
                   getOptionLabel={(option) => option}
                   filterSelectedOptions
+                  value={this.state.subject}
                   onChange={(e, v) => {
                     if (v) this.change(v, "subject");
                   }}
                   renderInput={(params) => (
-                    <TextField {...params} placeholder="Subject" />
+                    <TextField {...params}  placeholder="Subject" />
                   )}
                 />
               </div>
@@ -378,7 +470,7 @@ class Questions extends Component {
 
             {/* <div className="parent">
             <div className="add_ques__examDetails__examName_label"> */}
-            <Stack className="add_ques__form__btnGrp" >
+            <Stack className="add_ques__form__btnGrp">
               <Button
                 className="add_ques__form__btn"
                 variant="contained"
@@ -407,4 +499,9 @@ class Questions extends Component {
   }
 }
 
-export default Questions;
+export default (props) => (
+  <Questions
+      {...props}
+      params={useParams()}
+  />
+);

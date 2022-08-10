@@ -6,11 +6,12 @@ import "./Exam/Exam.css"
 import "./Question/Questions.css"
 import Questions from './Question/Questions';
 import reportWebVitals from './reportWebVitals';
+import AppRoutes from './AppRoutes';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Exam />
+    <AppRoutes />
   </React.StrictMode>
 );
 

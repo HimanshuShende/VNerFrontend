@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Navigate } from 'react-router-dom';
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Stack from "@mui/material/Stack";
@@ -15,13 +16,18 @@ class Exam extends Component {
     super();
     this.state = {
       examName: "",
+      examId: Number,
       attempts: Number,
       level: Number,
+      duration: Number,
       tag: "",
+      redirect: false,
+      showError: false
     };
   }
 
-  levels = [0, 1, 2];
+  
+  levels = [{"key": "Beginner", "value": 0}, {"key": "Intermediate", "value" : 1}, {"key": "Advanced", "value": 2}];
   tags = ["JEE", "NEET"];
   status = false;
   statusMessage = "crtexm";
@@ -37,6 +43,7 @@ class Exam extends Component {
       examName: "",
       attempts: Number,
       level: Number,
+      duration: Number,
       tag: "",
     });
   };
@@ -47,7 +54,23 @@ class Exam extends Component {
     });
   };
 
+  redirectToQuestions = () => {
+    if(this.state.redirect)
+    return <Navigate to={`/exam/${this.state.examId}/questions`} />
+  }
+
+  showErrorMessage = () => {
+    if(this.state.showError){
+      return (
+        <div className="create_exam__error">
+              <code> {this.statusMessage}</code>
+            </div>
+      )
+    }
+  }
+
   createExam = () => {
+    
     const formData = new FormData();
     formData.append(
       "data",
@@ -56,6 +79,7 @@ class Exam extends Component {
         tag: this.state.tag,
         exam_level: this.state.level,
         allowed_attempts: this.state.attempts,
+        duration : this.state.duration
       })
     );
 
@@ -63,15 +87,25 @@ class Exam extends Component {
       .post(`${baseURL}/createExam/ `, formData)
       .then((response) => {
         this.status = response.data["task_completed"];
+        if(this.status){
+          this.setState({examId: response.data["data"]["_id"]}, () => this.setState({redirect: true}));
+        }
+        else{
+          this.setState({showError: true});
+        }
         this.statusMessage = response.data["msg"];
         console.log(response.data["data"]);
       })
-      .catch((err) => (this.statusMessage = err));
+      .catch((err) => {
+        this.statusMessage = err;
+        this.setState({showError: true});
+      });
   };
 
   render() {
     return (
       <div className="create_exam">
+      {this.redirectToQuestions()}
         <header className="create_exam__header">
           <h1 id="create_exam__title">Create Exam</h1>
           <div id="create_exam__error" style={{ color: "red" }}>{this.statusMessage}</div>
@@ -79,9 +113,7 @@ class Exam extends Component {
             className="create_exam__form"
             spacing={3}
           >
-            <div className="create_exam__error">
-              <code> Error Message</code>
-            </div>
+            {this.showErrorMessage()}
             <div className="create_exam__formElement">
               <label className="create_exam__formLabel">Exam name: </label>
               <div className="create_exam__formInput">
@@ -103,9 +135,23 @@ class Exam extends Component {
                   className="create_exam__formTextInput"
                   style={{ width: "600px" }}
                   id="outlined-textarea"
-                  placeholder="Enter exam name..."
+                  placeholder="Enter max attempts..."
                   value={this.state.attempts}
-                  onChange={(e) => this.change(e.target.value, "attempts")}
+                  onChange={(e) => this.change(parseInt(e.target.value), "attempts")}
+                />
+              </div>
+            </div>
+
+            <div className="create_exam__formElement">
+              <label className="create_exam__formLabel">Exam duration: </label>
+              <div className="create_exam__formInput">
+                <TextField
+                  className="create_exam__formTextInput"
+                  style={{ width: "600px" }}
+                  id="outlined-textarea"
+                  placeholder="Enter exam duration..."
+                  value={this.state.duration}
+                  onChange={(e) => this.change(parseInt(e.target.value), "duration")}
                 />
               </div>
             </div>
@@ -123,7 +169,7 @@ class Exam extends Component {
                     this.change(v, "tag");
                   }}
                   renderInput={(params) => (
-                    <TextField {...params} placeholder="Subject" />
+                    <TextField {...params} placeholder="Select exam tag" />
                   )}
                 />
               </div>
@@ -136,13 +182,13 @@ class Exam extends Component {
                   className="create_exam__formTextInput"
                   id="tags-outlined"
                   options={this.levels}
-                  getOptionLabel={(option) => option}
+                  getOptionLabel={(option) => option.key}
                   filterSelectedOptions
                   onChange={(e, v) => {
-                    this.change(v, "level");
+                    this.change(v.value, "level");
                   }}
                   renderInput={(params) => (
-                    <TextField {...params} placeholder="Subject" />
+                    <TextField {...params} placeholder="Select level" />
                   )}
                 />
               </div>
@@ -152,7 +198,7 @@ class Exam extends Component {
               id="create_exam__formButton"
               style={{ width: "100%" }}
               variant="contained"
-              color="success"
+              color="primary"
               onClick={this.createExam}
             >
               Create
