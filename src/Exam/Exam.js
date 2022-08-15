@@ -19,6 +19,7 @@ class Exam extends Component {
       examId: Number,
       attempts: Number,
       level: Number,
+      type: Number,
       duration: Number,
       tag: "",
       redirect: false,
@@ -28,6 +29,7 @@ class Exam extends Component {
 
   
   levels = [{"key": "Beginner", "value": 0}, {"key": "Intermediate", "value" : 1}, {"key": "Advanced", "value": 2}];
+  types = [{"key": "Quiz", "value": 1}, {"key": "Exam", "value" : 2}];
   tags = ["JEE", "NEET"];
   status = false;
   statusMessage = "crtexm";
@@ -69,6 +71,16 @@ class Exam extends Component {
     }
   }
 
+  showOptional = () => {
+    if(this.state.type === 1)
+    return (
+      <label className="create_exam__formLabel">Exam tag(Optional): </label>
+    )
+    else return (
+      <label className="create_exam__formLabel">Exam tag: </label>
+    )
+  }
+
   createExam = () => {
     
     const formData = new FormData();
@@ -79,7 +91,8 @@ class Exam extends Component {
         tag: this.state.tag,
         exam_level: this.state.level,
         allowed_attempts: this.state.attempts,
-        duration : this.state.duration
+        duration : this.state.duration,
+        exam_type : this.state.type
       })
     );
 
@@ -157,7 +170,26 @@ class Exam extends Component {
             </div>
 
             <div className="create_exam__formElement">
-              <label className="create_exam__formLabel">Exam tag: </label>
+              <label className="create_exam__formLabel">Type: </label>
+              <div className="create_exam__formInput">
+                <Autocomplete
+                  className="create_exam__formTextInput"
+                  id="tags-outlined"
+                  options={this.types}
+                  getOptionLabel={(option) => option.key}
+                  filterSelectedOptions
+                  onChange={(e, v) => {
+                    this.change(v.value, "type");
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} placeholder="Select type" />
+                  )}
+                />
+              </div>
+            </div>
+
+            <div className="create_exam__formElement">
+              {this.showOptional()}
               <div className="create_exam__formInput">
                 <Autocomplete
                   className="create_exam__formTextInput"

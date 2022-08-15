@@ -43,6 +43,8 @@ class Questions extends Component {
     };
   }
 
+  questions = [];
+
   answerOptions = [];
   subjects = ["a", "b"];
 
@@ -58,6 +60,19 @@ class Questions extends Component {
 
     const formData = new FormData();
     formData.append("data", JSON.stringify({ exam_id: id }));
+
+    axios.post(`${baseURL}/getQuestionList/`, formData).then((response) => {
+      console.log(response);
+      if (!response.data["task_completed"]){
+        console.log(response.data["msg"]);
+        alert(response.data["msg"]);
+      }
+      else {
+        this.questions = response.data["data"]["questions"];
+        console.log(this.questions);
+      }
+    })
+
     axios
       .post(`${baseURL}/getExamDetails/`, formData)
       .then((response) => {
