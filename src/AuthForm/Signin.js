@@ -22,7 +22,9 @@ const Signin = () => {
     const onSubmit = event => {
         event.preventDefault()
         setValues({ ...values, error: false, loading: true })
-        signin({ email, password })
+        const formData = new FormData()
+        formData.append("data", JSON.stringify({email, password}))
+        signin(formData)
             .then(data => {
                 if (data.error) {
                     setValues({ ...values, error: data.error, loading: false })

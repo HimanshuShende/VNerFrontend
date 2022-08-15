@@ -29,7 +29,7 @@ export const signup = async formData => {
 
 export const signin = async formData => {
     try {
-        const response = axios.post(`${baseURL}/`, formData);
+        const response = axios.post(`${baseURL}/token/`, formData);
         return (await response).data.json()
     }
     catch (error) {
@@ -39,7 +39,7 @@ export const signin = async formData => {
 
 export const authenticate = (data, next) => {
     if (typeof window !== "undefined") {
-        localStorage.setItem("jwt", JSON.stringify(data))
+        localStorage.setItem("jwt", JSON.stringify(data["data"]["access"]))
         next()
     }
 }

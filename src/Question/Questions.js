@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import { useParams } from 'react-router-dom'
+import { useParams } from "react-router-dom";
 
+import { Link } from "react-router-dom";
 import "./Questions.css";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -26,6 +27,7 @@ class Questions extends Component {
     super();
     this.state = {
       question: "",
+      questionId: Number,
       sNo: 0,
       opt: "",
       options: [],
@@ -38,6 +40,7 @@ class Questions extends Component {
       nQs: 0,
       editName: false,
       editDuration: false,
+      editQuestion: false,
       showError: false,
       showDialogError: false,
     };
@@ -49,7 +52,6 @@ class Questions extends Component {
   subjects = ["a", "b"];
 
   componentDidMount() {
-
     const { id } = this.props.params;
 
     console.log(id);
@@ -59,30 +61,35 @@ class Questions extends Component {
     });
 
     const formData = new FormData();
-    formData.append("data", JSON.stringify({ exam_id: id }));
+    formData.append("data", JSON.stringify({ exam_id: parseInt(id) }));
 
     axios.post(`${baseURL}/getQuestionList/`, formData).then((response) => {
       console.log(response);
-      if (!response.data["task_completed"]){
+      if (!response.data["task_completed"]) {
         console.log(response.data["msg"]);
         alert(response.data["msg"]);
-      }
-      else {
+      } else {
         this.questions = response.data["data"]["questions"];
+        let sNo = 1;
+        this.questions.forEach((question) => {
+          question["SerialNo"] = sNo;
+          sNo++;
+        });
         console.log(this.questions);
       }
-    })
+    });
+
+    const formData1 = new FormData();
+    formData1.append("data", JSON.stringify({ exam_id: id }));
 
     axios
-      .post(`${baseURL}/getExamDetails/`, formData)
+      .post(`${baseURL}/getExamDetails/`, formData1)
       .then((response) => {
         console.log(response);
-        if (!response.data["task_completed"])
-          {
-            console.log(response.data["msg"]);
-            alert("Exam not found");
-          }
-        else {
+        if (!response.data["task_completed"]) {
+          console.log(response.data["msg"]);
+          alert("Exam not found");
+        } else {
           this.setState(
             {
               examName: response.data["data"]["name"],
@@ -105,7 +112,6 @@ class Questions extends Component {
       subject: "",
     });
     this.answerOptions = [];
-    
   };
 
   change = (value, paramName) => {
@@ -177,17 +183,16 @@ class Questions extends Component {
     } else if (!this.state.subject || this.state.subject.length === 0) {
       this.setState({ showError: true });
       this.statusMessage = "Subject tag cannot be empty";
-    } else if(this.answerOptions.length < 2){
+    } else if (this.answerOptions.length < 2) {
       this.setState({ showError: true });
       this.statusMessage = "Enter atleast two optons";
-    }
-     else if(this.answerOptions.filter(
-      (option) => option["isAnswer"] === true
-    ).length === 0){
+    } else if (
+      this.answerOptions.filter((option) => option["isAnswer"] === true)
+        .length === 0
+    ) {
       this.setState({ showError: true });
       this.statusMessage = "Select atleast one option as an answer";
-    }
-     else {
+    } else {
       const formData = new FormData();
       formData.append(
         "data",
@@ -212,7 +217,10 @@ class Questions extends Component {
           }
           this.statusMessage = response.data["msg"];
           console.log(response.data["data"]);
-          this.clearInputFields();
+          if (this.status) {
+            this.setState({ nQs: response.data["data"]["question_count"] });
+            this.clearInputFields();
+          }
         })
         .catch((err) => {
           this.setState({ showError: true });
@@ -220,6 +228,21 @@ class Questions extends Component {
         });
     }
   };
+
+  deleteQuestion = () => {
+    axios.delete(`${baseURL}/question/${this.state.questionId}/delete/`).then(response => {
+      if(response.data["task_completed"]){
+        this.statusMessage = response.data["msg"];
+        this.setState({
+          nQs: this.state.nQs-1
+        })
+        this.clearInputFields();
+      }
+      else {
+        alert(response.data["msg"]);
+      }
+    })
+  }
 
   completeExam = () => {
     //close create exam page
@@ -284,6 +307,36 @@ class Questions extends Component {
         console.log(err);
       });
   };
+
+  getQuestionDetails = (id, sno) => {
+    axios.get(`${baseURL}/question/${id}/detail/`).then((response) => {
+      if (response.data["task_completed"]) {
+        this.setState({
+          questionId: response.data["data"]["_id"],
+          question: response.data["data"]["statement"],
+          sNo: sno,
+          options: response.data["data"]["options"],
+          subject: response.data["data"]["tags"][0],
+          editQuestion: true
+        });
+        this.answerOptions = response.data["data"]["options"];
+      }
+    });
+  };
+
+  showButtons = () => {
+    if(this.state.editQuestion)
+    return (
+      <Button
+      className="add_ques__form__btn"
+      variant="contained"
+      color="warning"
+                onClick={this.deleteQuestion}
+              >
+                Delete Question
+              </Button>
+    )
+  }
 
   render() {
     return (
@@ -395,6 +448,29 @@ class Questions extends Component {
             </div>
           </Stack>
 
+          <Stack>
+            {this.questions.map((question) => {
+              return (
+                <div>
+                  <label>
+                    {" "}
+                    <a
+                      onClick={() =>
+                        this.getQuestionDetails(
+                          question["_id"],
+                          question["SerialNo"]
+                        )
+                      }
+                    >
+                      {" "}
+                      {question["SerialNo"]}. {question["statement"]}{" "}
+                    </a>
+                  </label>
+                </div>
+              );
+            })}
+          </Stack>
+
           <Stack className="add_ques__form" spacing={1} sx={{}}>
             <h3>Add Question</h3>
             {this.showErrorMessage()}
@@ -477,7 +553,7 @@ class Questions extends Component {
                     if (v) this.change(v, "subject");
                   }}
                   renderInput={(params) => (
-                    <TextField {...params}  placeholder="Subject" />
+                    <TextField {...params} placeholder="Subject" />
                   )}
                 />
               </div>
@@ -486,7 +562,7 @@ class Questions extends Component {
             {/* <div className="parent">
             <div className="add_ques__examDetails__examName_label"> */}
             <Stack className="add_ques__form__btnGrp">
-              <Button
+            <Button
                 className="add_ques__form__btn"
                 variant="contained"
                 color="primary"
@@ -494,6 +570,7 @@ class Questions extends Component {
               >
                 Add Question
               </Button>
+              {this.showButtons()}
               {/* </div>
             <div className="add_ques__examDetails__examName_value"> */}
               <Button
@@ -514,9 +591,4 @@ class Questions extends Component {
   }
 }
 
-export default (props) => (
-  <Questions
-      {...props}
-      params={useParams()}
-  />
-);
+export default (props) => <Questions {...props} params={useParams()} />;
