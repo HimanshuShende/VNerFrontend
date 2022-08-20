@@ -1,19 +1,22 @@
 .add_ques{
-  background-color: white;
+  background-color: #0A1929;
   padding: 15px 5px;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  color: #fff;
 }
 
 .add_ques__header{
-  background-color: white;
+  background-color: #0A1929;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 10px;
+  color: #fff;
 }
 
 #add_ques__title{
+  color: #fff;
   font-size: 2rem;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
@@ -55,38 +58,45 @@
 .add_ques__form{
   width: 100%;
   max-width: 800px;
-  background-color: white;
+  background-color: #292C34;
   border-radius: 10px;
   padding: 15px;
   margin-top: 10px;
   box-shadow: 1px 1px 10px 2px rgba(0, 0, 0, 0.3);
+  color: #fff;
 }
 
 .add_ques__form .add_ques__q{
+  color: #fff;
   /* border: 1px solid black; */
   padding: 5px; 
 }
 
 .add_ques__form .add_ques__q .add_ques__q_label{
+  color: #fff;
   font-size: 1rem;
   font-weight: 700;
 }
 
 .add_ques__form .add_ques__q .add_ques__q_value{
+  color: #fff;
   margin-top: 3px;
   width: 100%;
 }
 .add_ques__form .add_ques__q .add_ques__q_value .add_ques__q_textInput{
+  color: #fff;
   position: relative;
   margin-top: 5px;
 }
 .add_ques__form .add_ques__q .add_ques__q_value .add_ques__q_textInput.answer{
+  color: #fff;
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
 
 .add_ques__form .add_ques__form__btnGrp .add_ques__form__btn{
+  color: #fff;
   width: 100%;
   margin: 5px;
 }
@@ -97,6 +107,7 @@
   align-items: center;
 }
 .add_ques__form h3{
+  color: #fff;
   font-size: 1.4rem;
   margin: 2px 0px 5px 0px;
 }
@@ -129,3 +140,26 @@
   }
 }
 
+.questionListDiv{
+  border: 0.1vw solid #fff;
+  position: absolute;
+  margin-top: 26vh;
+  margin-left: -80vw;
+  padding: 1vw;
+  border-radius: 0.7vw;
+  min-height: 73vh;
+  height: auto;
+  width: 16vw;
+  font-size: 1vw;
+}
+.css-1sqnrkk-MuiInputBase-input-MuiOutlinedInput-input {
+
+  color: #fff !important;
+}
+.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input{
+  color: #fff!important;
+}
+.css-16awh2u-MuiAutocomplete-root .MuiOutlinedInput-root .MuiAutocomplete-input {
+
+  color: #fff !important;
+}
