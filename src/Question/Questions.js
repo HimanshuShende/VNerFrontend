@@ -16,16 +16,17 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import LoadingButton from "@mui/lab/LoadingButton";
 import EditIcon from "@mui/icons-material/Edit";
-import SaveIcon from '@mui/icons-material/Save';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CancelIcon from '@mui/icons-material/Cancel';
-import DoneIcon from '@mui/icons-material/Done';
+import SaveIcon from "@mui/icons-material/Save";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CancelIcon from "@mui/icons-material/Cancel";
+import DoneIcon from "@mui/icons-material/Done";
 // import { Link } from "react-router-dom";
 // import DialogContentText from "@mui/material/DialogContentText";
 // import Chip from "@mui/material/Chip";
 import { baseURL, ExamTypeDetail } from "../components/utilities/constants";
 import useAxios from "../components/utilities/useAxios";
 import Add from "@mui/icons-material/Add";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 class Questions extends Component {
   constructor(props) {
@@ -55,8 +56,8 @@ class Questions extends Component {
       changingMetadata: false,
       finishExam: false,
       questions: [],
-      editingQuestion : false,
-      deletingQuestion : false,
+      editingQuestion: false,
+      deletingQuestion: false,
       pageTitle: ExamTypeDetail[this.props.exam_type].pageTitle,
     };
     this.API = this.props.useAxiosHook;
@@ -71,22 +72,24 @@ class Questions extends Component {
     const formData = new FormData();
     formData.append("data", JSON.stringify({ exam_id: parseInt(exam_id) }));
 
-    this.API.post(`${baseURL}/v2/getQuestionList/`, formData).then((response) => {
-      // console.log(response);
-      if (!response.data["task_completed"]) {
-        console.log(response.data["msg"]);
-        alert(response.data["msg"]);
-      } else {
-        let questionList = response.data["data"]["questions"];
-        let sNo = 1;
-        questionList.forEach((question) => {
-          question["SerialNo"] = sNo;
-          sNo++;
-        });
-        this.setState({ questions: questionList });
-        // console.log(questionList);
+    this.API.post(`${baseURL}/v2/getQuestionList/`, formData).then(
+      (response) => {
+        // console.log(response);
+        if (!response.data["task_completed"]) {
+          console.log(response.data["msg"]);
+          alert(response.data["msg"]);
+        } else {
+          let questionList = response.data["data"]["questions"];
+          let sNo = 1;
+          questionList.forEach((question) => {
+            question["SerialNo"] = sNo;
+            sNo++;
+          });
+          this.setState({ questions: questionList });
+          // console.log(questionList);
+        }
       }
-    });
+    );
   }
 
   componentDidMount() {
@@ -140,10 +143,10 @@ class Questions extends Component {
   change = (value, paramName) => {
     // console.log(typeof value);
     this.setState({
-      [paramName]: value
+      [paramName]: value,
     });
-    if (paramName === "editName" || paramName === "editDuration"){
-      this.setState({ changingMetadata: true })
+    if (paramName === "editName" || paramName === "editDuration") {
+      this.setState({ changingMetadata: true });
     }
   };
 
@@ -176,7 +179,7 @@ class Questions extends Component {
 
   updateAnswers = (e) => {
     this.answerOptions.forEach((option) => {
-      if (option["statement"] === e.target.name){
+      if (option["statement"] === e.target.name) {
         option["isAnswer"] = e.target.checked;
       }
     });
@@ -223,7 +226,10 @@ class Questions extends Component {
         this.setState({ showError: false });
       }, 2000);
       valid = false;
-    } else if ((!this.state.subject || this.state.subject.length === 0) && (this.props.exam_type === "exam")) {
+    } else if (
+      (!this.state.subject || this.state.subject.length === 0) &&
+      this.props.exam_type === "exam"
+    ) {
       this.setState({ showError: true });
       this.statusMessage = "Subject tag cannot be empty";
       validationErrTimeout = setTimeout(() => {
@@ -249,7 +255,7 @@ class Questions extends Component {
       valid = false;
     }
     return [valid, validationErrTimeout];
-  }
+  };
 
   addQuestion = () => {
     this.showSuccessMsg = "";
@@ -295,7 +301,7 @@ class Questions extends Component {
             this.setState({ nQs: response.data["data"]["question_count"] });
             this.clearInputFields();
           }
-          
+
           this.setState({ addingQuestion: false });
         })
         .catch((err) => {
@@ -325,7 +331,10 @@ class Questions extends Component {
         })
       );
       this.setState({ editingQuestion: true });
-      this.API.post(`${baseURL}/v2/question/${this.state.questionId}/edit/`, formData)
+      this.API.post(
+        `${baseURL}/v2/question/${this.state.questionId}/edit/`,
+        formData
+      )
         .then((response) => {
           this.status = response.data["task_completed"];
           if (!this.status) {
@@ -348,7 +357,7 @@ class Questions extends Component {
           if (this.status) {
             this.clearInputFields();
           }
-          
+
           this.setState({ editingQuestion: false, editQuestion: false });
         })
         .catch((err) => {
@@ -359,9 +368,10 @@ class Questions extends Component {
   };
 
   deleteQuestion = () => {
-    this.setState({ deletingQuestion: true })
-    this.API.delete(`${baseURL}/v2/question/${this.state.questionId}/delete/`)
-    .then((response) => {
+    this.setState({ deletingQuestion: true });
+    this.API.delete(
+      `${baseURL}/v2/question/${this.state.questionId}/delete/`
+    ).then((response) => {
       if (response.data["task_completed"]) {
         this.statusMessage = response.data["msg"];
         this.setState({
@@ -374,7 +384,6 @@ class Questions extends Component {
       }
       this.setState({ deletingQuestion: false, editQuestion: false });
     });
-    
   };
 
   completeExam = () => {
@@ -449,7 +458,7 @@ class Questions extends Component {
       <Stack style={{ marginTop: "20px" }}>
         {this.state.questions.map((question) => {
           return (
-            <div key={`question_${question["_id"]}`} >
+            <div key={`question_${question["_id"]}`}>
               <label>
                 {" "}
                 <a
@@ -484,7 +493,7 @@ class Questions extends Component {
         });
         this.answerOptions = response.data["data"]["options"];
         this.answerOptions.forEach((option) => {
-            option["isAnswer"] = false;
+          option["isAnswer"] = false;
         });
         document.getElementById("addQuestionForm").scrollIntoView();
       }
@@ -693,8 +702,15 @@ class Questions extends Component {
                 </Dialog>
               </div>
             </Stack>
-
-            <Stack className="add_ques__form" id="addQuestionForm" spacing={1} sx={{}}>
+        
+              <div className="questionListDiv">{this.renderQuestionList()}</div>
+          
+            <Stack
+              className="add_ques__form"
+              id="addQuestionForm"
+              spacing={1}
+              sx={{}}
+            >
               <h3>Add Question</h3>
               {this.showErrorMessage()}
               {this.showSuccessMessage()}
@@ -787,7 +803,7 @@ class Questions extends Component {
               </div>
 
               <div className="add_ques__form__btnGrp">
-                { !this.state.editQuestion && (
+                {!this.state.editQuestion && (
                   <LoadingButton
                     className="add_ques__form__btn"
                     onClick={this.addQuestion}
@@ -802,24 +818,20 @@ class Questions extends Component {
                 )}
                 {this.showButtons()}
                 <LoadingButton
-                    className="add_ques__form__btn"
-                    startIcon={<DoneIcon style={{ display: "block" }} />}
-                    variant="contained"
-                    loadingPosition="start"
-                    color="success"
-                    onClick={() => {
-                      this.setState({ finishExam: true });
-                    }}
-                  >
-                    {this.completeExam()}
-                    Finish
-                  </LoadingButton>
+                  className="add_ques__form__btn"
+                  startIcon={<DoneIcon style={{ display: "block" }} />}
+                  variant="contained"
+                  loadingPosition="start"
+                  color="success"
+                  onClick={() => {
+                    this.setState({ finishExam: true });
+                  }}
+                >
+                  {this.completeExam()}
+                  Finish
+                </LoadingButton>
               </div>
-              
             </Stack>
-
-            {this.renderQuestionList()}
-
           </header>
         </div>
       </>
