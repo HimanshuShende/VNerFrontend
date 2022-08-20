@@ -1,9 +1,8 @@
 
 import axios from "axios";
+import { baseURL } from "../components/utilities/constants";
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-
-const baseURL = "https://vnerapi.azurewebsites.net/api";
 
 export const isAuthenticated = () => {
     if (typeof window == "undefined") {

@@ -41,7 +41,8 @@
   margin-right: 10px;
 }
 .add_ques__examDetails .add_ques__examDetails__examName .add_ques__examDetails__examName_btn{
-  width: 30px;
+  width: fit-content;
+  padding-left: 10px;
 }
 
 .add_ques__form__title{
@@ -92,6 +93,8 @@
 .add_ques__form .add_ques__form__btnGrp{
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 .add_ques__form h3{
   font-size: 1.4rem;
@@ -118,9 +121,11 @@
   .add_ques__form .add_ques__form__btnGrp{
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
   }
   .add_ques__form .add_ques__form__btnGrp .add_ques__form__btn{
     width: 100%;
-    max-width: 200px;
+    max-width: 170px;
   }
 }
+

@@ -1,0 +1,155 @@
+.ELV_container{
+    display: flex;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 15px;
+
+    .ELV_section{
+        /* border: 1px solid black; */
+        padding: 20px;
+        width: 100%;
+        min-height: 30px;
+        border-radius: 4px;
+        box-shadow: 1px 0px 4px 2px rgba(0,0,0,0.2);
+        transition: all 0.2s ease-in;
+        max-width: 1000px;
+               
+        // &:hover{
+        //     box-shadow: 1px 2px 7px 1px rgba(0,0,0,0.5);
+        // }
+
+        .section_header{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 15px;
+            gap: 4px;
+            // border-bottom: 2px solid #08AEEA;
+
+            .name {
+                font-size: 1.4rem;
+                font-weight: 700;
+                text-transform: uppercase;
+            }
+
+            hr{
+                width: 100%;
+                background-color: #08AEEA;
+                border: none;
+                height: 1px;
+                margin: 0px 4px 0px 10px;
+                margin-bottom: -5px;
+            }
+            
+            button {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 3px 8px;
+                border-radius: 4px;
+                border: none;
+                outline: none;
+                box-shadow: 1px 2px 7px 1px rgba(0,0,0,0.1);
+                transition: all 0.2s ease-in;
+                cursor: pointer;
+                background-color: #08AEEA;
+                color: white;
+                font-size: 18px;
+
+                &:hover{
+                    transform: translateY(-2px);
+                    box-shadow: 1px 2px 7px 1px rgba(0,0,0,0.3);
+                }
+            }
+        }
+
+        .section_content{
+            padding: 0px 10px;
+            .exams{
+                display: flex;
+                justify-content: center;
+                align-content: center;
+                flex-direction: column;
+                gap: 15px;
+                padding-top: 15px;
+
+                .exam{
+                    display: flex;
+                    justify-content: space-between;
+                    align-content: center;
+
+                    .details{
+                        display: flex;
+                        justify-content: center;
+                        align-content: center;
+                        flex-direction: column;
+                        
+                        .name{
+                            font-size: 1rem;
+                            font-weight: 500;
+                        }
+
+                        .other {
+                            display: flex;
+                            justify-content: flex-start;
+                            align-items: center;
+                            flex-wrap: wrap;
+                            color: rgba(138, 134, 134, 0.9);
+
+                            span{
+                                display: flex;
+                                justify-content: flex-start;
+                                align-items: center;
+                                gap: 1px;
+                                margin-top: 4px;
+                                font-size: 0.8rem;
+                                margin-right: 9px;
+
+                                svg {
+                                    width: 0.9rem;
+                                    height: 0.9rem;
+                                    margin-bottom: -2px;
+                                }
+                            }
+
+                            @media screen and (max-width: 426px) {
+                                span {
+                                    font-size: 0.7rem;
+                                    svg {
+                                        width: 0.8rem;
+                                        height: 0.8rem;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    .action{
+                        display: flex;
+                        justify-content: center;
+                        align-items: flex-start;
+                        gap: 4px;
+                        margin-left: 10px;
+
+                        button {
+                            max-height: fit-content;
+                            border: none;
+                            background-color: transparent;
+                            color: #08AEEA;
+                            cursor: pointer;
+
+                            &.edit{
+                            }
+
+                            &.delete{
+                                color: #FF2525;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

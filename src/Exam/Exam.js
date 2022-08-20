@@ -1,19 +1,17 @@
 import React, { Component } from "react";
-import { Navigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import "./Exam.css";
-import axios from "axios";
-axios.defaults.xsrfCookieName = "csrftoken";
-axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+import { baseURL } from "../components/utilities/constants";
+import useAxios from "../components/utilities/useAxios";
 
-const baseURL = "https://vnerapi.azurewebsites.net/api";
+import "./Exam.css";
 
 class Exam extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       examName: "",
       examId: Number,
@@ -23,20 +21,26 @@ class Exam extends Component {
       duration: Number,
       tag: "",
       redirect: false,
-      showError: false
+      showError: false,
+      tags: []
     };
+    this.API = this.props.useAxiosInstance;
   }
-
-  
-  levels = [{"key": "Beginner", "value": 0}, {"key": "Intermediate", "value" : 1}, {"key": "Advanced", "value": 2}];
-  types = [{"key": "Quiz", "value": 1}, {"key": "Exam", "value" : 2}];
-  tags = ["JEE", "NEET"];
+  levels = [
+    { key: "Beginner", value: 0 },
+    { key: "Intermediate", value: 1 },
+    { key: "Advanced", value: 2 },
+  ];
+  types = [
+    { key: "Quiz", value: 1 },
+    { key: "Exam", value: 2 },
+  ];
   status = false;
   statusMessage = "crtexm";
 
   componentDidMount() {
-    axios.get(`${baseURL}/getExamTags/`).then((response) => {
-      this.tags = response.data["tags"];
+    this.API.get(`${baseURL}/v2/getExamTags/`).then((response) => {
+      this.setState({ tags: response.data["tags"] });
     });
   }
 
@@ -57,32 +61,34 @@ class Exam extends Component {
   };
 
   redirectToQuestions = () => {
-    if(this.state.redirect)
-    return <Navigate to={`/exam/${this.state.examId}/questions`} />
-  }
+    if (this.state.redirect){
+      if (this.state.type === 1){
+        return <Navigate to={`/quiz/${this.state.examId}/questions`} />;
+      }else if (this.state.type === 2) {
+        return <Navigate to={`/exam/${this.state.examId}/questions`} />;
+      }
+    } 
+  };
 
   showErrorMessage = () => {
-    if(this.state.showError){
+    if (this.state.showError) {
       return (
         <div className="create_exam__error">
-              <code> {this.statusMessage}</code>
-            </div>
-      )
+          <code> {this.statusMessage}</code>
+        </div>
+      );
     }
-  }
+  };
 
   showOptional = () => {
-    if(this.state.type === 1)
-    return (
-      <label className="create_exam__formLabel">Exam tag(Optional): </label>
-    )
-    else return (
-      <label className="create_exam__formLabel">Exam tag: </label>
-    )
-  }
+    if (this.state.type === 1)
+      return (
+        <label className="create_exam__formLabel">Tag(Optional): </label>
+      );
+    else return <label className="create_exam__formLabel">Tag: </label>;
+  };
 
   createExam = () => {
-    
     const formData = new FormData();
     formData.append(
       "data",
@@ -91,50 +97,50 @@ class Exam extends Component {
         tag: this.state.tag,
         exam_level: this.state.level,
         allowed_attempts: this.state.attempts,
-        duration : this.state.duration,
-        exam_type : this.state.type
+        duration: this.state.duration,
+        exam_type: this.state.type,
       })
     );
 
-    axios
-      .post(`${baseURL}/createExam/ `, formData)
+    this.API
+      .post(`${baseURL}/v2/createExam/ `, formData)
       .then((response) => {
         this.status = response.data["task_completed"];
-        if(this.status){
-          this.setState({examId: response.data["data"]["_id"]}, () => this.setState({redirect: true}));
-        }
-        else{
-          this.setState({showError: true});
+        if (this.status) {
+            this.setState({ examId: response.data["data"]["_id"] }, () =>
+            this.setState({ redirect: true })
+          );
+        } else {
+          this.setState({ showError: true });
         }
         this.statusMessage = response.data["msg"];
         console.log(response.data["data"]);
       })
       .catch((err) => {
         this.statusMessage = err;
-        this.setState({showError: true});
+        this.setState({ showError: true });
       });
   };
 
   render() {
     return (
       <div className="create_exam">
-      {this.redirectToQuestions()}
+        {this.redirectToQuestions()}
         <header className="create_exam__header">
-          <h1 id="create_exam__title">Create Exam</h1>
-          <div id="create_exam__error" style={{ color: "red" }}>{this.statusMessage}</div>
-          <Stack
-            className="create_exam__form"
-            spacing={3}
-          >
+          <h1 id="create_exam__title">Create Exam/Quiz</h1>
+          <div id="create_exam__error" style={{ color: "red" }}>
+            {this.statusMessage}
+          </div>
+          <Stack className="create_exam__form" spacing={3}>
             {this.showErrorMessage()}
             <div className="create_exam__formElement">
-              <label className="create_exam__formLabel">Exam name: </label>
+              <label className="create_exam__formLabel">Name: </label>
               <div className="create_exam__formInput">
                 <TextField
                   className="create_exam__formTextInput"
                   style={{ width: "600px" }}
                   id="outlined-textarea"
-                  placeholder="Enter exam name..."
+                  placeholder="Enter name..."
                   value={this.state.examName}
                   onChange={(e) => this.change(e.target.value, "examName")}
                 />
@@ -142,7 +148,9 @@ class Exam extends Component {
             </div>
 
             <div className="create_exam__formElement">
-              <label className="create_exam__formLabel">Max attempts allowed: </label>
+              <label className="create_exam__formLabel">
+                Max attempts allowed:{" "}
+              </label>
               <div className="create_exam__formInput">
                 <TextField
                   className="create_exam__formTextInput"
@@ -150,13 +158,17 @@ class Exam extends Component {
                   id="outlined-textarea"
                   placeholder="Enter max attempts..."
                   value={this.state.attempts}
-                  onChange={(e) => this.change(parseInt(e.target.value), "attempts")}
+                  onChange={(e) =>
+                    this.change(parseInt(e.target.value), "attempts")
+                  }
                 />
               </div>
             </div>
 
             <div className="create_exam__formElement">
-              <label className="create_exam__formLabel">Exam duration: </label>
+              <label className="create_exam__formLabel">
+                Duration(minutes):{" "}
+              </label>
               <div className="create_exam__formInput">
                 <TextField
                   className="create_exam__formTextInput"
@@ -164,7 +176,9 @@ class Exam extends Component {
                   id="outlined-textarea"
                   placeholder="Enter exam duration..."
                   value={this.state.duration}
-                  onChange={(e) => this.change(parseInt(e.target.value), "duration")}
+                  onChange={(e) =>
+                    this.change(parseInt(e.target.value), "duration")
+                  }
                 />
               </div>
             </div>
@@ -194,7 +208,7 @@ class Exam extends Component {
                 <Autocomplete
                   className="create_exam__formTextInput"
                   id="tags-outlined"
-                  options={this.tags}
+                  options={this.state.tags}
                   getOptionLabel={(option) => option}
                   filterSelectedOptions
                   onChange={(e, v) => {
@@ -220,7 +234,7 @@ class Exam extends Component {
                     this.change(v.value, "level");
                   }}
                   renderInput={(params) => (
-                    <TextField {...params} placeholder="Select level" />
+                    <TextField {...params} placeholder="Select level (Default Beginner)" />
                   )}
                 />
               </div>
@@ -242,4 +256,12 @@ class Exam extends Component {
   }
 }
 
-export default Exam;
+
+function wrapExamWithHooks(Component){
+  return function WrappedFunction(props){
+    const useAxiosHook = useAxios();
+    return <Component {...props} useAxiosInstance={useAxiosHook}  />
+  };
+}
+
+export default wrapExamWithHooks(Exam);

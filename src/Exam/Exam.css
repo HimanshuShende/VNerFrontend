@@ -15,6 +15,7 @@
 #create_exam__title {
   font-size: 2rem;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  margin-bottom: 10px;
 }
 
 #create_exam__error{
@@ -41,9 +42,15 @@
 }
 
 .create_exam__form .create_exam__formElement .create_exam__formInput{
+  display: flex;
+  justify-content: stretch;
   margin-top: 3px;
   width: 100%;
 }
+.create_exam__form .create_exam__formElement .create_exam__formInput > *{
+  width: 100%;
+}
+
 .create_exam__form .create_exam__formElement .create_exam__formInput .create_exam__formTextInput{
 }
 
@@ -57,6 +64,17 @@
   background-color: rgba(224, 6, 43, 0.3);
   padding: 5px 10px;
   border-left: 3px solid rgba(131, 0, 22, 0.4);
+}
+
+.create_exam__success{
+  width: 100%;
+}
+.create_exam__success code{
+  width: 100%;
+  color: green;
+  background-color: rgba(6, 199, 32, 0.2);
+  padding: 5px 10px;
+  border-left: 3px solid rgba(6, 199, 32, 0.4);
 }
 
 @media screen and (min-width: 426px) {

@@ -1,0 +1,36 @@
+#complete-profile input[type=date]::-webkit-datetime-edit-year-field:not([aria-valuenow]),
+#complete-profile input[type=date]::-webkit-datetime-edit-month-field:not([aria-valuenow]),
+#complete-profile input[type=date]::-webkit-datetime-edit-day-field:not([aria-valuenow]) {
+    color: transparent;
+    display:  none;
+}
+
+#complete-profile{
+    display: flex;
+    padding: 20px;
+    flex-direction: column;
+}
+#complete-profile form {
+    margin: 0px auto;
+}
+#profile-form{
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    /* border: 1px solid black; */
+    border-radius: 10px;
+    box-shadow: 1px 1px 8px rgba(0, 0, 0, .2);
+    overflow: hidden;
+}
+
+#profile-form-header{
+    margin-bottom: 10px;
+    padding: 10px;
+    text-align: center;
+    font-weight: 900;
+    font-size: 1.7rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}

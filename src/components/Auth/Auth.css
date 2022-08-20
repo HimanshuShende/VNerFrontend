@@ -1,0 +1,172 @@
+
+.signup_container,
+.signin_container{
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.signup_container{
+    padding-top: 30px;
+    height: fit-content;
+}
+.signin_container{
+    min-height: 80vh;
+}
+.signin_form{
+    max-width: 400px;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+.signin_form .form_title{
+    margin-top: 15px;
+    font-size: 20px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight: 600;
+    color: rgba(88, 88, 88, 0.9);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.signin_form .form_success{
+    border-radius: 7px;
+    padding: 10px 15px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    background-color: rgb(9, 182, 0);
+    box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.2);
+    text-shadow: 1px 4px 2px rgba(0, 0, 0, 0.1);
+}
+
+.signin_form .form_error{
+    border-radius: 7px;
+    padding: 10px 15px;
+    border: none;
+    font-size: 15px;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    background-color: rgb(185, 32, 32);
+    box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.2);
+    text-shadow: 1px 4px 2px rgba(0, 0, 0, 0.2);
+}
+
+.signin_form form{
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.signin_form form div {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0px;
+}
+
+.signin_form form div label {
+    font-size: 15px;
+    font-weight: 500;
+    padding-bottom: 4px;
+    color: rgba(111, 111, 111, 0.9);
+}
+.signin_form form div label span{
+    color: red;
+}
+
+.signin_form form div label ~ input{
+    min-width: 250px;
+    padding: 10px 12px;
+    border-radius: 2px;
+    font-size: 14px;
+    border: none;
+    outline: none;
+    box-shadow: inset 1px 1px 1px 1px rgba(0, 0, 0, 0.09),
+                inset -1px -1px 1px 1px rgba(0, 0, 0, 0.09);
+    
+    transition: all 0.2s ease-in;
+}
+
+.signin_form form div label ~ input:focus{
+    padding: 8px 12px;
+    font-size: 16px;
+}
+
+.signin_form form div input[type="submit"]{
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight: 500;
+    text-transform: uppercase;
+    border: none;
+    outline: none;
+    color: white;
+    background-color: rgba(25, 118, 210, 0.9);
+    box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease-in;
+    text-shadow: 1px 2px 2px rgba(0, 0, 0, 0.0);
+}
+.signin_form form div input[type="submit"]:hover,
+.signin_form form div input[type="submit"]:focus{
+    background-color: rgba(25, 118, 210, 1);
+    box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.2);
+    text-shadow: 1px 4px 2px rgba(0, 0, 0, 0.4);
+    transform: translateY(-2px);
+    cursor: pointer;
+}
+
+.signin_form .form_seperator{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.signin_form .form_seperator hr {
+    width: 100%;
+    background-color: rgba(111, 111, 111, 0.4);
+    border: 1px solid rgba(111, 111, 111, 0.2);
+}
+.signin_form .form_seperator span{
+    margin: 0px 8px;
+    font-weight: 500;
+    color: rgba(111, 111, 111, 0.9);
+
+}
+
+.signin_form > div:last-of-type{
+    padding: 10px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgba(111, 111, 111, 0.9);
+}
+
+.signin_form > div:last-of-type a {
+    margin: 0px 8px;
+    font-weight: 500;
+    text-transform: uppercase;
+    text-decoration: underline;
+    color: rgba(111, 111, 111, 0.9);
+}
+@media screen and (max-width: 321px) {
+    .signin_form{
+        padding: 20px 12px;
+    }
+    .popup_container .popup{
+        /* padding: 10px 20px; */
+        /* margin: 0px; */
+    }
+    .popup_container .popup span{
+        font-size: 0.97rem;
+    }
+}

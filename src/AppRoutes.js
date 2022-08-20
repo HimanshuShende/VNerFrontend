@@ -1,24 +1,53 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import React, { useContext } from 'react';
+import {  Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Exam from './Exam/Exam';
 import "./Exam/Exam.css"
 import "./Question/Questions.css"
+import "./components/Auth/Auth.css";
+
 import Questions from './Question/Questions';
 import Home from './Home/Home';
-import Signin from './AuthForm/Signin';
-import Signup from './AuthForm/Signup';
+
+import LoginPage from './components/Auth/Login';
+import SignupPage from './components/Auth/Signup';
+import { AuthContext } from './Context/AuthProvider';
+import { Header } from './components/Header';
+import ExamListView from './components/dashboard/ExamListView';
+import { ExamTypeDetail } from './components/utilities/constants';
+import CompleteProfile from './components/CompleteProfile/CompleteProfile';
+import { ProfileDataProvider } from './Context/CompleteProfileContext';
 
 
 export default function AppRoutes() {
+    let { user } = useContext(AuthContext);
+    let location = useLocation();
+
+    const renderCompleteProfile = () => {
+        return (
+            <ProfileDataProvider> 
+                <CompleteProfile />
+            </ProfileDataProvider>
+        )
+    }
     return (
-        <BrowserRouter>
+        <Header>
             <Routes>
                 <Route path='/' element={<Home/>} />
-                <Route path='/signin' element={<Signin/>} />
-                <Route path='/signup' element={<Signup/>} />
-                <Route path='/exam' element={<Exam/>} />
-                <Route path='/exam/:id/questions' element={<Questions/>} />
+                <Route path='/signin' element={<LoginPage />} />
+                <Route path='/signup' element={<SignupPage />} />
+                <Route path='/exam' element={user ? <Exam/> : <Navigate to="/signin?next=/exam" />} />
+                <Route path="/exams" element={user ? <ExamListView examTypeDetail={ExamTypeDetail.exam}  /> : <Navigate to="/signin?next=/exams" />} />
+                <Route path="/quizes" element={user ? <ExamListView examTypeDetail={ExamTypeDetail.quiz} /> : <Navigate to="/signin?next=/quizes" />} />
+                <Route
+                    path='/exam/:id/questions'
+                    element={user ? <Questions exam_type={"exam"} /> : <Navigate to={`/signin?next=${location.pathname}`} /> }
+                />
+                <Route
+                    path='/quiz/:id/questions'
+                    element={user ? <Questions exam_type={"quiz"} /> : <Navigate to={`/signin?next=${location.pathname}`} /> }
+                />
+                <Route path='/complete_profile' element={ user ? renderCompleteProfile() : <Navigate to="/signin?next=/complete_profile" /> } />
             </Routes>
-        </BrowserRouter>
+        </Header>
     )
 }
