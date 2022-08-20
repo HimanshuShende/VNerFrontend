@@ -1,0 +1,22 @@
+.parent{
+    background-color: #151d31;
+    min-height: 40vh;
+    height: auto;
+}
+.flex-row{
+    display: flex;
+    flex-direction: row;
+}
+.flex-column{
+    display: flex;
+    flex-direction: column;
+}
+.bold-text{
+    font-size: 1.4vw;
+    font-weight: bold;
+    color: azure;
+}
+.primary-text{
+    font-size: 1vw;
+    color: azure;
+}
