@@ -493,6 +493,7 @@ class Questions extends Component {
         });
         this.answerOptions = response.data["data"]["options"];
         this.answerOptions.forEach((option) => {
+          option["wasAnswer"] = option["isAnswer"];
           option["isAnswer"] = false;
         });
         document.getElementById("addQuestionForm").scrollIntoView();
@@ -575,15 +576,6 @@ class Questions extends Component {
                 <label className="add_ques__examDetails__examName_value">
                   {this.state.examName}
                 </label>
-                {/* <Button
-                  className="add_ques__examDetails__examName_btn"
-                  size="small"
-                  variant="contained"
-                  color="primary"
-                  onClick={() => this.change(true, "editName")}
-                >
-                  Edit
-                </Button> */}
                 <LoadingButton
                   className="add_ques__examDetails__examName_btn"
                   onClick={() => this.change(true, "editName")}
@@ -776,6 +768,11 @@ class Questions extends Component {
                           color="warning"
                           onClick={() => this.handleDelete(option["statement"])}
                         />
+                        {option["wasAnswer"] && (
+                          <div style={{ marginLeft: 10 }}>
+                            (Previously selected answer)
+                          </div>
+                        )}
                       </div>
                     );
                   })}

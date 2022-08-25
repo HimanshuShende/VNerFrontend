@@ -84,9 +84,9 @@ export const AuthProvider = ({ children }) => {
                 localStorage.setItem("authTokens", JSON.stringify(data))
             }
             
-            let profile_completed = await getIsProfileCompleted(tempUser, data.access)
-           
-            if (!profile_completed){
+            let profile_completed_result = await getIsProfileCompleted(tempUser, data.access)
+            // console.log(profile_completed_result)
+            if (!profile_completed_result["profile_completed"]){
                 console.log("Redirect to complete profile.....")
                 navigate("/complete_profile", { replace: true })
             }else{
@@ -135,13 +135,14 @@ export const AuthProvider = ({ children }) => {
         login: login,
         setUser: setUser,
         userRole:userRole,
+        setUserRole: setUserRole,
         loginUser: loginUser,
         logoutUser: logoutUser,
         authTokens: authTokens,
         authErrorMsg: authErrorMsg,
         setAuthTokens:setAuthTokens,
         showLoginPopup: showLoginPopup,
-        profileCompleted:profileCompleted,
+        profileCompleted: profileCompleted,
         setProfileCompleted: setProfileCompleted
     }
 

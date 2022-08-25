@@ -7,7 +7,7 @@ export const authPrefix = "Bearer";
 export const XsrfCookieName = "csrftoken";
 export const XsrfHeaderName = "X-CSRFTOKEN";
 export const updateTokenIntervalTime = 1000 * 60 * 9;
-export const INDIVIDUAL_TAB_LOGIN = true;
+export const INDIVIDUAL_TAB_LOGIN = false;
 export const REFRESH_TOKEN_RETRY = 3;
 
 export const UserRoleType = {
@@ -29,7 +29,8 @@ export const ExamTypeDetail = {
             "single": "Exam",
             "plural": "Exams"
         },
-        "URL": `${baseURL}/v2/examList/`
+        "URL": `${baseURL}/v2/examList/`,
+        "fetchAll":`${baseURL}/v2/allExamList/`
     },
     "quiz" : {
         "examType": "quiz",
@@ -37,6 +38,7 @@ export const ExamTypeDetail = {
             "single": "Quiz",
             "plural": "Quizes"
         },
-        "URL": `${baseURL}/v2/quizList/`
+        "URL": `${baseURL}/v2/quizList/`,
+        "fetchAll": `${baseURL}/v2/allQuizList/`
     }
 }

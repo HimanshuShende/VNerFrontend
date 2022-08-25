@@ -21,8 +21,8 @@ import { ExamLevel } from "../utilities/constants";
 import "./ExamListView.scss";
 
 const ExamListView = ({ examTypeDetail }) => {
-    let { user, userRole } = useContext(AuthContext);
-    const { pageTitle, URL, examType } = examTypeDetail;
+    let { user, userRole, profileCompleted, setUserRole } = useContext(AuthContext);
+    const { pageTitle, URL, examType, fetchAll } = examTypeDetail;
 
     const [ showPopup, setShowPopup ] = useState(false);
     const [ showErr, setShowErr ] = useState(false);
@@ -40,14 +40,21 @@ const ExamListView = ({ examTypeDetail }) => {
     const createExamRedirect = () => {
         setPopupMsg("Redirecting...");
         setShowPopup(true);
-        setTimeout(()=>{
-            navigate("/exam");
-        }, 100);
+        if (userRole === UserRoleType.EXAMINER){
+            setTimeout(()=>{
+                navigate("/exam");
+            }, 100);
+        }
     }
 
     const getExamList = async () => {
         setExamList([]);
-        let response = await API.get(URL);
+        let response;
+        if (user.userRole === UserRoleType.EXAMINER){
+            response = await API.get(URL);
+        }else{
+            response = await API.get(fetchAll);
+        }
         let data = await response.data;
         setExamList(data.exams);
     }
@@ -82,6 +89,43 @@ const ExamListView = ({ examTypeDetail }) => {
         setPopupMsg("Loading...");
     }
 
+    const publishTheExam = async (e, exam_id) => {
+        let response = await API.patch(`${baseURL}/v2/publish_exam/${exam_id}/`)
+        let data = await response.data
+        // console.log("Event  : ", e.target)
+        // console.log("Exam id  : ", exam_id)
+        // console.log("Response  : ", response)
+        // console.log("Response status : ", response.status)
+        // console.log("DATA : ", data)
+        if (response.status === 200){
+            getExamList();
+        }else if (response.status === 404){
+            setShowErr(true)
+            setPopupMsg(data["msg"])
+        }else if (response.status === 403){
+            setShowErr(true)
+            setPopupMsg(data["msg"])
+        }
+    }
+
+    const unPublishTheExam = async (e, exam_id) => {
+        if (window.confirm("Are you sure you want to un-publish the exam?")){
+            let response = await API.patch(`${baseURL}/v2/unpublish_exam/${exam_id}/`)
+            let data = await response.data
+            if (response.status === 200){
+                // e.target.classList.remove("published")
+                // e.target.innerHTML = "Publish"
+                getExamList();
+            }else if (response.status === 404){
+                setShowErr(true)
+                setPopupMsg(data["msg"])
+            }else if (response.status === 403){
+                setShowErr(true)
+                setPopupMsg(data["msg"])
+            }
+        }
+    }
+
     const renderExamList = () =>{
         return (
             <div className="exams">
@@ -99,9 +143,9 @@ const ExamListView = ({ examTypeDetail }) => {
                                 <span>
                                     <SubjectIcon /> {ExamLevel[exam.level]}
                                 </span>
-                                <span>
+                                {/* <span>
                                     <PersonIcon /> 20
-                                </span>
+                                </span> */}
                                 <span>
                                     <BlockIcon /> {exam.allowed_attempts}
                                 </span>
@@ -112,12 +156,27 @@ const ExamListView = ({ examTypeDetail }) => {
                                         </span>
                                     )
                                 }
+                                {exam.created_by && (
+                                    <span>
+                                        <PersonIcon /> {exam.created_by}
+                                    </span>
+                                )}
                             </div>
                         </div>
-                        <div className="action">
-                            <button className='edit' onClick={() => { redirectToExamEdit(exam.id) }}><EditIcon /></button>
-                            <button className='delete' onClick={() => { deleteExam(exam.id) }}><DeleteIcon /></button>
-                        </div>
+                        {userRole === UserRoleType.EXAMINER && (
+                            <div className="action">
+                                <button className={`publish ${exam.published ? "published" : ""}`} onClick={(event) => { 
+                                    if (!exam.published){
+                                        publishTheExam(event, exam.id)
+                                    }else{
+                                        unPublishTheExam(event, exam.id)
+                                    }
+                                 }}>{exam.published? "Un-publish" : "Publish"}</button>
+                                <button className='edit' onClick={() => { redirectToExamEdit(exam.id) }}><EditIcon /></button>
+                                <button className='delete' onClick={() => { deleteExam(exam.id) }}><DeleteIcon /></button>
+                            </div>
+                        )}
+                        
                     </div>
                 ))}
             </div>
@@ -133,9 +192,19 @@ const ExamListView = ({ examTypeDetail }) => {
         }, 100);
     }
 
-    useEffect(() => {
+    useEffect(() => { 
         getExamList();
     }, [URL])
+
+    // useEffect(() => { 
+    //     API.get(`${baseURL}/v2/getUserRole/`)
+    //         .then(response => {
+    //             console.log("Response : ", response)
+    //             if (response.status === 200){
+    //                 setUserRole(response.data["role"])
+    //             }
+    //         })
+    // }, [])
 
     useEffect(() => {
         renderExamList();
@@ -157,7 +226,7 @@ const ExamListView = ({ examTypeDetail }) => {
                 </div>
             }
             <div className='ELV_container'>
-                {(user && user?.profile_completed) && (
+                {(user && profileCompleted) && (
                     <div className='ELV_section'>
                         <div className="section_header">
                             <div className="name">{pageTitle["plural"]}</div>
@@ -165,9 +234,11 @@ const ExamListView = ({ examTypeDetail }) => {
                             <button onClick={refreshExamList}>
                                 <RefreshIcon />
                             </button>
-                            <button onClick={createExamRedirect}>
-                                <AddIcon />
-                            </button>
+                            {userRole === UserRoleType.EXAMINER && (
+                                <button onClick={createExamRedirect}>
+                                    <AddIcon />
+                                </button>
+                            )}
                         </div>
 
                         <div className="section_content">
@@ -183,7 +254,7 @@ const ExamListView = ({ examTypeDetail }) => {
                         </div>
                     </div>
                 )}
-                {(user && !user?.profile_completed) && (
+                {(user && !profileCompleted) && (
                     <div className='ELV_section'>
                         <div className="section_header">
                             <div className="name">Complete profile to view this page.</div>

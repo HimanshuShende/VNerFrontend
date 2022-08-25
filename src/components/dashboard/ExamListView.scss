@@ -140,7 +140,23 @@
                             color: #08AEEA;
                             cursor: pointer;
 
-                            &.edit{
+                            &.publish{
+                                border: 1px solid #08AEEA;
+                                padding: 2px 8px;
+                                border-radius: 4px;
+                                font-weight: 600;
+                                transition: all 200ms ease-in;
+                                &:hover:not(.published){
+                                    background-color: #08AEEA;
+                                    color: white;
+                                    box-shadow: 1px 2px 2px rgba(0,0,0,0.1);
+                                    // transform: translateY(-2px);
+                                }
+
+                                &.published{
+                                    border: 1px solid lightgrey;
+                                    color: lightgray;
+                                }
                             }
 
                             &.delete{

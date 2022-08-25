@@ -18,7 +18,7 @@ export default function TargetExams({ resetProfileForm }){
     }, [resetProfileForm]);
     
     return (
-        <FormControl fullWidth variant="filled" sx={{ mb: 1, minWidth: 300 }}>
+        <FormControl fullWidth variant="filled" sx={{ mb: 1, maxWidth: 900, minWidth: 600 }}>
             <InputLabel id="select-role-label" size="small">Select Role</InputLabel>
             <Select
                 inputProps={{ name:"role" }}

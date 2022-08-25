@@ -1,18 +1,22 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+// import MenuIcon from "@mui/icons-material/Menu";
 import { AuthContext } from "../Context/AuthProvider";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import {  useLocation, useNavigate } from "react-router-dom";
+import { baseURL } from "./utilities/constants";
+import useAxios from "./utilities/useAxios";
 
 export const Header = ({ children }) => {
-  let { user, logoutUser } = useContext(AuthContext);
+  let { user, logoutUser, profileCompleted, setProfileCompleted, setUserRole } = useContext(AuthContext);
   let navigate = useNavigate();
   let location = useLocation();
+  let API = useAxios();
 
   const renderLogInLogOut = () => {
     return !user ? (
@@ -42,7 +46,7 @@ export const Header = ({ children }) => {
         >
           Home
         </Button>
-        {!user?.profile_completed ? (
+        {!profileCompleted ? (
           showCompleProfileLink() && (
             <Button
               color="inherit"
@@ -66,18 +70,39 @@ export const Header = ({ children }) => {
               Quizes
             </Button>
             {user && (
-              <Button
-                color="inherit"
-                onClick={() => navigate("/profile", { replace: true })}
-              >
-                Profile
-              </Button>
+              <>
+                <Button
+                  color="inherit"
+                  onClick={() => navigate("/profile", { replace: true })}
+                >
+                  Profile
+                </Button>
+                <Button
+                  color="inherit"
+                  onClick={() => navigate("/wallet", { replace: true })}
+                >
+                  <AccountBalanceWalletIcon />
+                </Button>
+              </>
             )}
           </>
         )}
       </>
     );
   };
+
+  useEffect(() => {
+    if (!profileCompleted){
+      API.get(`${baseURL}/v2/getUserDetails/`)
+          .then(resp => {
+              if (resp.data["task_completed"]) {
+                  setUserRole(resp.data["role"]);
+                  setProfileCompleted(resp.data["profile_completed"]);
+              }
+          })
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profileCompleted])
 
   return (
     <>

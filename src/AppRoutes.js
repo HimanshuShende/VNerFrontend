@@ -16,6 +16,9 @@ import ExamListView from './components/dashboard/ExamListView';
 import { ExamTypeDetail } from './components/utilities/constants';
 import CompleteProfile from './components/CompleteProfile/CompleteProfile';
 import { ProfileDataProvider } from './Context/CompleteProfileContext';
+import FilterExamList from './components/FilterExamList';
+import Wallet from './components/Wallet/Wallet';
+import Profile from './components/Profile';
 
 
 export default function AppRoutes() {
@@ -47,6 +50,9 @@ export default function AppRoutes() {
                     element={user ? <Questions exam_type={"quiz"} /> : <Navigate to={`/signin?next=${location.pathname}`} /> }
                 />
                 <Route path='/complete_profile' element={ user ? renderCompleteProfile() : <Navigate to="/signin?next=/complete_profile" /> } />
+                <Route path="/search" element={<FilterExamList />}/>
+                <Route path="/profile" element={<Profile />}/>
+                <Route path="/wallet" element={<Wallet />}/>
             </Routes>
         </Header>
     )

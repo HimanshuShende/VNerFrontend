@@ -24,8 +24,8 @@ import { AuthContext } from '../../Context/AuthProvider';
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function CompleteProfile() {
-  let { user, setUser } = useContext(AuthContext);
-  console.log("profileCompleted : ", user?.profile_completed)
+  let { user, setProfileCompleted, profileCompleted, setUserRole } = useContext(AuthContext);
+  console.log("profileCompleted : ", user?.profile_completed, profileCompleted)
   const { profileData, resetProfileData } = useContext(ProfileDataContext);
   const [completionMsg, setCompletionMsg] = useState(user?.profile_completed ? "Profile already completed" : "");
   const [resetProfileForm, setResetProfileForm] = useState(false);
@@ -47,6 +47,7 @@ export default function CompleteProfile() {
   const handleNext = () => {
     if (activeStep === 0) {
       let { validated, msg } = validatePersonalDetails(profileData);
+      // validated =  true; msg = " sdad ";
       if (validated) {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
       } else {
@@ -55,6 +56,7 @@ export default function CompleteProfile() {
       }
     } else if (activeStep === 1) {
       let { validated, msg } = validateEducationDetails(profileData);
+      // validated =  true; msg = " sdad ";
       if (validated) {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
       } else {
@@ -63,6 +65,7 @@ export default function CompleteProfile() {
       }
     } else if (activeStep === 2) {
       let { validated, msg } = validateTargetExamsDetails(profileData);
+      // validated =  true; msg = " sdad ";
       if (validated) {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
       } else {
@@ -71,6 +74,7 @@ export default function CompleteProfile() {
       }
     } else if (activeStep === 3) {
       let { validated, msg } = validateSelectedRoleDetails(profileData);
+      // validated =  true; msg = " sdad ";
       if (validated) {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
       } else {
@@ -113,6 +117,8 @@ export default function CompleteProfile() {
           setCompletionMsg(response.data["msg"]);
           user.profile_completed = true
           setTimeout(() => {
+            setUserRole(response.data["role"])
+            setProfileCompleted(true);
             navigate("/", { replace: true })
           }, 100);
         }
@@ -139,13 +145,23 @@ export default function CompleteProfile() {
     }
   }, [alertOpen])
 
+  // useEffect(() => {
+  //   API.get(`${baseURL}/v2/getUserDetails/`)
+  //         .then(resp => {
+  //             if (resp.data["task_completed"]) {
+  //                 setProfileCompleted(resp.data["profile_completed"]);
+  //             }
+  //         })
+  // }, [])
+
   useEffect(() => {
-    if (user?.profile_completed) {
+    // if (user?.profile_completed) {
+    if (profileCompleted) {
       // navigate("/", { replace: true })
       setCompletionMsg("Profile already completed");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [profileCompleted])
 
   return (
     <>
@@ -191,7 +207,7 @@ export default function CompleteProfile() {
           </div>
           :
           <form ref={formElem} action="" method="post" onSubmit={handleSubmit}>
-            <Box sx={{ maxWidth: 400, width: "100%" }} id="profile-form">
+            <Box sx={{ maxWidth: 700, width: "100%" }} id="profile-form">
               <div id="profile-form-header">
                 Complete Profile
               </div>
@@ -218,7 +234,7 @@ export default function CompleteProfile() {
                 ))}
               </Stepper>
               {activeStep === steps.length && (
-                <Paper square elevation={0} sx={{ p: 3 }}>
+                <Paper square elevation={0} sx={{ p: 3, minWidth: 600, width: "100%" }}>
                   <Typography>All steps completed - you&apos;re finished</Typography>
                   <Button type="submit" variant="contained" color="primary" sx={{ mt: 1, mr: 1 }}>
                     Submit

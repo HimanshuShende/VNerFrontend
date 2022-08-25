@@ -55,7 +55,7 @@ const useAxios = () => {
 
         setAuthTokens(resp.data)
         setUser(jwt_decode(resp.data.access))
-
+        console.log("Logged in...")
         req.headers.Authorization = `${authPrefix} ${resp.data.access}`;
         return req
     })

@@ -80,10 +80,10 @@ export default function PersonalDetails({ resetProfileForm }){
     return (
         <>
             <FormControl sx={{ displayPrint: "flex" }}>
-                <TextField sx={{ mb: 1, minWidth: 300 }} inputProps={{ name:"first_name" }} onChange={handleFirstNameChange} value={firstName} fullWidth variant="filled" size="small" label="First Name" color="primary" required/>
-                <TextField sx={{ mb: 1, minWidth: 300 }} inputProps={{ name:"middle_name" }} onChange={handleMiddleNameChange} value={middleName} fullWidth variant="filled" size="small" label="Middle Name" color="primary" />
-                <TextField sx={{ mb: 1, minWidth: 300 }} inputProps={{ name:"last_name" }} onChange={handleLastNameChange} value={lastName} fullWidth variant="filled" size="small" label="Last Name" color="primary" required/>
-                <TextField sx={{ mb: 1, minWidth: 300 }} inputProps={{ name:"date_of_birth" }} onChange={handleDobChange} value={dob}
+                <TextField sx={{ mb: 1, minWidth: 600 }} inputProps={{ name:"first_name" }} onChange={handleFirstNameChange} value={firstName} fullWidth variant="filled" size="small" label="First Name" color="primary" required/>
+                <TextField sx={{ mb: 1, minWidth: 600 }} inputProps={{ name:"middle_name" }} onChange={handleMiddleNameChange} value={middleName} fullWidth variant="filled" size="small" label="Middle Name" color="primary" />
+                <TextField sx={{ mb: 1, minWidth: 600 }} inputProps={{ name:"last_name" }} onChange={handleLastNameChange} value={lastName} fullWidth variant="filled" size="small" label="Last Name" color="primary" required/>
+                <TextField sx={{ mb: 1, minWidth: 600 }} inputProps={{ name:"date_of_birth" }} onChange={handleDobChange} value={dob}
                     fullWidth
                     required 
                     variant="filled" size="small" 
@@ -92,8 +92,8 @@ export default function PersonalDetails({ resetProfileForm }){
                     placeholder="Date of Birth" 
                     color="primary" 
                 />
-                <FormControl sx={{ minWidth: 300, display: "flex", flexDirection:"row", gap: 1 }}>
-                    <Stack sx={{ maxWidth: 100 }}>
+                <FormControl sx={{ minWidth: 600, display: "flex", flexDirection:"row", gap: 1 }}>
+                    <Stack sx={{ minWidth: 200 }}>
                         <Autocomplete 
                             id="country-code"
                             getOptionLabel={(option) => `${option.iso} +${option.code}`}
@@ -110,7 +110,7 @@ export default function PersonalDetails({ resetProfileForm }){
                             renderInput={(params) => (
                                 <TextField 
                                 {...params} 
-                                sx={{ maxWidth: 100 }}
+                                sx={{ maxWidth: 200 }}
                                 label="Search your country code."
                                 variant="filled"
                                 size="small"
@@ -120,9 +120,9 @@ export default function PersonalDetails({ resetProfileForm }){
                             )}
                         />
                     </Stack>
-                    <TextField sx={{ mb: 1, maxWidth: 210}} inputProps={{ name:"mobile", pattern:"[0-9]{10}" }} onChange={handleMobileChange} value={mobile} required fullWidth variant="filled" size="small" label="Mobile" type="text" color="primary" />
+                    <TextField sx={{ mb: 1, maxWidth: 600}} inputProps={{ name:"mobile", pattern:"[0-9]{10}" }} onChange={handleMobileChange} value={mobile} required fullWidth variant="filled" size="small" label="Mobile" type="text" color="primary" />
                 </FormControl>
-                <TextField sx={{ mb: 1, minWidth: 300 }} disabled={(email!=="")} inputProps={{ name:"email" }} onChange={handleEmailChange} value={email} required fullWidth variant="filled" size="small" label="Email" type="email" color="primary" />
+                <TextField sx={{ mb: 1, minWidth: 600 }} disabled={(email!=="")} inputProps={{ name:"email" }} onChange={handleEmailChange} value={email} required fullWidth variant="filled" size="small" label="Email" type="email" color="primary" />
             </FormControl>
         </>
     )

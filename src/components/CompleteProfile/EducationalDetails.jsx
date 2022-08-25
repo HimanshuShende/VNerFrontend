@@ -42,10 +42,10 @@ function SoCDetails ({ showDelete, handleDeleteEducation, id, handleAddEduData, 
         }
     }, [grade, school, schoolAddr, socData])
     return(
-        <FormControl sx={{ mb: 1 }}>
+        <FormControl fullWidth  sx={{ mb: 1, maxWidth: 600}}>
             { showDelete && <hr style={{ width: "100%" , height: 1, backgroundColor: "rgba(0, 0, 0, 0.5)", border: "none"}}/>}
-            <TextField inputProps={{ name:"school_name" }} required={id===1} value={school} onChange={handleSchoolChange} sx={{ mb: 1, minWidth: 300 }} fullWidth variant="filled" size="small" label="School/College" color="primary" />
-            <FormControl fullWidth variant="filled" sx={{ mb: 1, minWidth: 300 }}>
+            <TextField inputProps={{ name:"school_name" }} required={id===1} value={school} onChange={handleSchoolChange} sx={{ mb: 1, minWidth: 600 }} fullWidth variant="filled" size="small" label="School/College" color="primary" />
+            <FormControl fullWidth variant="filled" sx={{ mb: 1, minWidth: 600 }}>
                 <InputLabel id="grade-label">Grade</InputLabel>
                 <Select
                     inputProps={{ name:"grade" }}
@@ -63,7 +63,7 @@ function SoCDetails ({ showDelete, handleDeleteEducation, id, handleAddEduData, 
                     <MenuItem value={4}>Post Graduate</MenuItem>
                 </Select>
             </FormControl>
-            <TextField inputProps={{ name:"addr" }} value={schoolAddr} onChange={handleAddrChange} required={id===1} sx={{ mb: 1, minWidth: 300 }} fullWidth variant="filled" size="small" label="Address" color="primary" />
+            <TextField inputProps={{ name:"addr" }} value={schoolAddr} onChange={handleAddrChange} required={id===1} sx={{ mb: 1, minWidth: 600 }} fullWidth variant="filled" size="small" label="Address" color="primary" />
             { showDelete && <Button sx={{ maxWidth: 100 }}  onClick={() => { handleDeleteEducation(id)}} size="small" variant="contained" color="error" startIcon={<DeleteIcon />}> Delete </Button> }
         </FormControl>
     )
@@ -122,7 +122,7 @@ export default function EducationalDetails({ resetProfileForm }){
                 <SoCDetails key={`Soc_${val}`} edudata={eduData.find(value=>value.id===val)} id={val} handleAddEduData={addEduData} showDelete={val!==1} handleDeleteEducation={handleDeleteEducation}/>
             ))}
             {socList.length<4 ? 
-                <div style={{ mb: 1, width: "100%", maxWidth: 300, display: "flex", flexDirection: "row-reverse" }}>
+                <div style={{ mb: 1, width: "100%", maxWidth: 600, display: "flex", flexDirection: "row-reverse" }}>
                     <Button sx={{  }} variant="contained" startIcon={<AddCircleOutlineIcon/>} onClick={handleAddEducation} size="small">Add Education</Button>
                 </div>            
             : ''}

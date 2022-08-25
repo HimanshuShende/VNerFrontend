@@ -44,7 +44,7 @@ export default function TargetExams({ resetProfileForm }){
     }, [resetProfileForm]);
 
     return (
-        <FormControl fullWidth variant="filled" sx={{ mb: 1, minWidth: 300 }}>
+        <FormControl fullWidth variant="filled" sx={{ mb: 1, maxWidth: 900, minWidth: 600  }}>
             <InputLabel id="target-exams-label" size="small">Target Exam</InputLabel>
             <Select
                 multiple
