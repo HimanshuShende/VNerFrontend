@@ -17,6 +17,8 @@ import { ExamTypeDetail } from './components/utilities/constants';
 import CompleteProfile from './components/CompleteProfile/CompleteProfile';
 import { ProfileDataProvider } from './Context/CompleteProfileContext';
 
+ 
+
 
 export default function AppRoutes() {
     let { user } = useContext(AuthContext);

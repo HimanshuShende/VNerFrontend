@@ -8,6 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { AuthContext } from "../Context/AuthProvider";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import './Header.css'
 
 export const Header = ({ children }) => {
   let { user, logoutUser } = useContext(AuthContext);
@@ -17,13 +18,18 @@ export const Header = ({ children }) => {
   const renderLogInLogOut = () => {
     return !user ? (
       <Button
+      style={{   borderRadius:"4vw"}}
+       
+      className="mybtn1"
         color="inherit"
         onClick={() => navigate("/signin", { replace: true })}
       >
         Login
       </Button>
     ) : (
-      <Button onClick={() => logoutUser()} color="inherit">
+      <Button 
+      className="mybtn1"
+      onClick={() => logoutUser()} color="inherit">
         Logout
       </Button>
     );
@@ -82,7 +88,7 @@ export const Header = ({ children }) => {
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" style={{ background: '#191B20' }}>
+        <AppBar position="fixed" style={{ background: '#252f5a',width:'100vw',height:'11.5vh',paddingTop:'1.5vh'}}>
           <Toolbar>
             <IconButton
               size="large"
@@ -93,15 +99,40 @@ export const Header = ({ children }) => {
             >
               {/* <MenuIcon /> */}
             </IconButton>
-            <Typography
-              variant="h6"
+           <Typography
+              variant="h4"
               component="div"
               onClick={() => navigate("/", { replace: true })}
               sx={{ flexGrow: 1, cursor: "pointer" }}
             >
-              V-NER
+              V-NE
             </Typography>
-            {renderNavLinks()}
+            <Typography
+              variant="h4"
+              component="div"
+              onClick={() => navigate("/", { replace: true })}
+              sx={{ flexGrow: 500, cursor: "pointer" ,color:'#ff344d'}}
+            >
+             R
+            </Typography>
+         
+            <Typography
+              variant="h6"
+              component="div"
+              onClick={() => navigate("/", { replace: true })}
+              sx={{ flexGrow: 50, cursor: "pointer" }}
+            >
+             Leaderboard
+            </Typography>
+            <Typography
+              variant="h6"
+              component="div"
+              onClick={() => navigate("/", { replace: true })}
+              sx={{ flexGrow: 50, cursor: "pointer" }}
+            >
+             Tag Team
+            </Typography>
+            {/* {renderNavLinks()} */}
             {renderLogInLogOut()}
           </Toolbar>
         </AppBar>

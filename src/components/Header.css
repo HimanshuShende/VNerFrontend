@@ -1,0 +1,94 @@
+.mybtn1 {
+  font-size: 16px;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 14px 35px;
+  display: inline-block;
+  color: #fff;
+border-radius: 4vw;
+  cursor: pointer;
+  -webkit-transition: all 0.3s ease-in;
+  -o-transition: all 0.3s ease-in;
+  transition: all 0.3s ease-in;
+  background-image: -webkit-gradient(
+    linear,
+    right top,
+    left top,
+    from(#ff344d),
+    to(#d2273c)
+  );
+  background-image: -webkit-linear-gradient(right, #ff344d, #d2273c);
+  background-image: -o-linear-gradient(right, #ff344d, #d2273c);
+  background-image: linear-gradient(to left, #ff344d, #d2273c);
+}
+.mybtn1:hover {
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    from(#ff344d),
+    to(#d2273c)
+  );
+  background-image: -webkit-linear-gradient(left, #ff344d, #d2273c);
+  background-image: -o-linear-gradient(left, #ff344d, #d2273c);
+  background-image: linear-gradient(to right, #ff344d, #d2273c);
+  color: #fff;
+  -webkit-transform: translateY(-2px);
+  -ms-transform: translateY(-2px);
+  transform: translateY(-2px);
+}
+
+/* Header{
+margin-top: 3vh;
+margin-left: 4vw;
+width: 20vw;
+} */
+html {
+  background-color: #070b28;
+}
+.MuiBox-root {
+  background-color: #070b28;
+}
+.funfact {
+  background-color: #070b28;
+  padding: 103px 0px 4px;
+}
+.funfact .single-fun {
+  text-align: center;
+}
+.funfact .single-fun img {
+  display: inline-block;
+  margin-bottom: 13px;
+}
+.funfact .single-fun .count-area {
+  font-size: 70px;
+  line-height: 80px;
+  font-weight: 500;
+  font-family: "Ubuntu", sans-serif;
+  color: #fff;
+}
+.funfact .single-fun p {
+  font-size: 24px;
+  line-height: 34px;
+  font-weight: 300;
+  margin-bottom: 0px;
+  display: inline-block;
+  margin-top: 9px;
+}
+.get-start {
+  padding: 120px 0px 120px;
+  background-color: #0b122e;
+}
+.get-start .left-area .section-heading {
+  text-align: left;
+  margin-bottom: 0px;
+}
+.get-start .left-area .section-heading .mybtn1 {
+  margin-top: 36px;
+}
+.get-start .right-image {
+  text-align: center;
+}
+.get-start .right-image img {
+  display: inline-block;
+}
