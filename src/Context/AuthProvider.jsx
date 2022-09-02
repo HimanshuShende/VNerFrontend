@@ -61,22 +61,38 @@ export const AuthProvider = ({ children }) => {
     }
 
     const login = async (email, pswd) => {
-        let response = await fetch(tokenUrl,{
+        let response = await fetch(`http://127.0.0.1:8000/auth/token/`,{
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ "email": email, "password": pswd })
+            body: JSON.stringify({ 
+                "client_id": "CZ3UDpI141q7xoXnlWA15eSbNP8pfot5RRDQlOqs",
+                "client_secret": "7sXNME1i0VTmhVpIWmYZ5t1Ri4v63prOnxFORMEAs4M5eSKQam2y7GvSWM8BKBOafhg9Uo8gGtP8tpxLMKsc6RiNIdkNilcUHE3wqmCRWv8gDQmk71fGJhxbLH9F1HvJ",
+                "grant_type": "password",
+                "username": email,
+                "password": pswd
+            })
         })
+        // let response = await fetch(tokenUrl,{
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json"
+        //     },
+        //     body: JSON.stringify({ 
+        //         "email": email, "password": pswd
+        //     })
+        // })
 
         let data = await response.json();
+        console.log(data);
         
         if (response.status === 200){
             setAuthTokens(data);
             const tempUser = jwt_decode(data.access)
             // console.log(tempUser)
             setUser(tempUser);
-            setUserRole(tempUser["userRole"]);
+            // setUserRole(tempUser["userRole"]);
 
             if(INDIVIDUAL_TAB_LOGIN){
                 sessionStorage.setItem("authTokens", JSON.stringify(data))
@@ -85,14 +101,13 @@ export const AuthProvider = ({ children }) => {
             }
             
             let profile_completed_result = await getIsProfileCompleted(tempUser, data.access)
+            let user_role_result = await getUserRole(tempUser,data.access);
             // console.log(profile_completed_result)
+            // console.log(user_role_result)
             if (!profile_completed_result["profile_completed"]){
                 console.log("Redirect to complete profile.....")
                 navigate("/complete_profile", { replace: true })
             }else{
-
-                await getUserRole(tempUser,data.access);
-
                 if (location.search !== ""){
                     console.log("Redirecting.....")
                     let next = location.search.split("=").pop();

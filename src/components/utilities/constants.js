@@ -1,6 +1,6 @@
 export const testBaseURL = "http://127.0.0.1:8000/api";
-export const baseURL = "https://vnerapi.azurewebsites.net/api";
-// export const baseURL = testBaseURL;
+// export const baseURL = "https://vnerapi.azurewebsites.net/api";
+export const baseURL = testBaseURL;
 export const tokenUrl = `${baseURL}/token/`;
 export const refreshTokenUrl = `${baseURL}/token/refresh/`;
 export const authPrefix = "Bearer";

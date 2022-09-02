@@ -21,7 +21,7 @@ import { ExamLevel } from "../utilities/constants";
 import "./ExamListView.scss";
 
 const ExamListView = ({ examTypeDetail }) => {
-    let { user, userRole, profileCompleted, setUserRole } = useContext(AuthContext);
+    let { user, userRole, profileCompleted } = useContext(AuthContext);
     const { pageTitle, URL, examType, fetchAll } = examTypeDetail;
 
     const [ showPopup, setShowPopup ] = useState(false);
@@ -48,15 +48,18 @@ const ExamListView = ({ examTypeDetail }) => {
     }
 
     const getExamList = async () => {
+        setShowPopup(true)
         setExamList([]);
         let response;
-        if (user.userRole === UserRoleType.EXAMINER){
+        console.log("User ", user)
+        if (userRole === UserRoleType.EXAMINER){
             response = await API.get(URL);
         }else{
             response = await API.get(fetchAll);
         }
         let data = await response.data;
         setExamList(data.exams);
+        setShowPopup(false)
     }
     const redirectToExamEdit = (exam_id) => {
         setPopupMsg("Loading...");
@@ -194,7 +197,7 @@ const ExamListView = ({ examTypeDetail }) => {
 
     useEffect(() => { 
         getExamList();
-    }, [URL])
+    }, [URL, userRole])
 
     // useEffect(() => { 
     //     API.get(`${baseURL}/v2/getUserRole/`)

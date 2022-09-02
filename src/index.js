@@ -10,15 +10,19 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 import $ from 'jquery';
 import Popper from 'popper.js';
 import 'font-awesome/css/font-awesome.min.css';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Router>
-      <AuthProvider>
-        <AppRoutes />
-      </AuthProvider>
-    </Router>
+    <GoogleOAuthProvider clientId="195265870257-68m8nudqbsol51u6dgmqdhv6c8c8eo47.apps.googleusercontent.com">
+      <Router>
+        <AuthProvider>
+          <AppRoutes />
+        </AuthProvider>
+      </Router>  
+    </GoogleOAuthProvider>;
+    
   </React.StrictMode>
 );
 

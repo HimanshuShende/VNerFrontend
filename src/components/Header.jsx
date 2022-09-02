@@ -46,6 +46,18 @@ export const Header = ({ children }) => {
         >
           Home
         </Button>
+        <Button
+          color="inherit"
+          onClick={() => navigate("/exams", { replace: true })}
+        >
+          Exams
+        </Button>
+        <Button
+          color="inherit"
+          onClick={() => navigate("/quizes", { replace: true })}
+        >
+          Quizes
+        </Button>
         {!profileCompleted ? (
           showCompleProfileLink() && (
             <Button
@@ -57,18 +69,6 @@ export const Header = ({ children }) => {
           )
         ) : (
           <>
-            <Button
-              color="inherit"
-              onClick={() => navigate("/exams", { replace: true })}
-            >
-              Exams
-            </Button>
-            <Button
-              color="inherit"
-              onClick={() => navigate("/quizes", { replace: true })}
-            >
-              Quizes
-            </Button>
             {user && (
               <>
                 <Button
@@ -92,15 +92,16 @@ export const Header = ({ children }) => {
   };
 
   useEffect(() => {
-    if (!profileCompleted){
-      API.get(`${baseURL}/v2/getUserDetails/`)
-          .then(resp => {
-              if (resp.data["task_completed"]) {
-                  setUserRole(resp.data["role"]);
+    API.get(`${baseURL}/v2/getUserDetails/`)
+        .then(resp => {
+            if (resp.data["task_completed"]) {
+                setUserRole(resp.data["role"]);
+                if (!profileCompleted){
                   setProfileCompleted(resp.data["profile_completed"]);
-              }
-          })
-    }
+                }
+            }
+        })
+    
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profileCompleted])
 
